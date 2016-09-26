@@ -16,7 +16,7 @@ BIN = ./bin
 STANDARD_IMAGES = android-arm linux-x86 linux-x64 linux-arm64 linux-armv5 linux-armv6 linux-armv7 linux-mipsel linux-ppc64le windows-x86 windows-x64
 
 # These images are expected to have explicit rules for *both* build and testing
-NON_STANDARD_IMAGES = browser-asmjs manylinux-x64 manylinux-x86
+NON_STANDARD_IMAGES = browser-asmjs manylinux-x64 manylinux-x86 mingwpy-base
 
 # This list all available images
 IMAGES = $(STANDARD_IMAGES) $(NON_STANDARD_IMAGES)
@@ -104,6 +104,24 @@ manylinux-x86: manylinux-x86/Dockerfile
 manylinux-x86.test: manylinux-x86
 	$(DOCKER) run $(RM) dockcross/manylinux-x86 > $(BIN)/dockcross-manylinux-x86 && chmod +x $(BIN)/dockcross-manylinux-x86
 	$(BIN)/dockcross-manylinux-x86 /opt/python/cp35-cp35m/bin/python test/run.py
+
+#
+# mingwpy-base
+#
+mingwpy-base: mingwpy-base.docker
+	$(DOCKER) build -t $(ORG)/mingwpy-base \
+                  -f mingwpy-base.docker .
+
+#
+# mingwpy-base
+#
+mingwpy-x64: mingwpy-base
+	$(DOCKER) build -t $(ORG)/mingwpy-x64 \
+		--build-arg IMAGE=$(ORG)/$@ \
+		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--build-arg VCS_URL=`git config --get remote.origin.url` \
+		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+                  -f mingwpy-x64/Dockerfile .
 
 #
 # base

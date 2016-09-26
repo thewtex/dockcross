@@ -1,0 +1,38 @@
+FROM dockcross/base:latest
+MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
+
+RUN apt-get update && apt-get -y install \
+  git \
+  subversion \
+  zip \
+  tar \
+  autoconf \
+  make \
+  libtool \
+  automake \
+  p7zip \
+  patch \
+  bison \
+  libgettextpo-dev \
+  locales \
+  nano \
+  wine \
+  wget \
+  sshpass \
+  texinfo && \
+  echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+  locale-gen en_US.UTF-8 && \
+  /usr/sbin/update-locale LANG=en_US.UTF-8 && \
+  apt-get -y clean
+ENV LC_ALL en_US.UTF-8
+# Set up wine
+RUN dpkg --add-architecture i386 && \
+  apt-get update && \
+  apt-get install -y wine32
+ENV WINEARCH win64
+RUN wine hostname
+
+RUN cd /usr/src && \
+  git clone -b mingwpy-dev https://github.com/mingwpy/mingw-builds.git && \
+  cd mingw-builds && \
+  git checkout b6703e87edce89e481f03bd5812b90195d96e83f
