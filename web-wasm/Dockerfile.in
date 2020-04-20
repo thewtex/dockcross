@@ -1,4 +1,4 @@
-FROM trzeci/emscripten-fastcomp:sdk-tag-1.39.10-64bit
+FROM trzeci/emscripten-upstream:sdk-tag-1.39.10-64bit
 MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
 
 # Revert back to "/bin/sh" as default shell
