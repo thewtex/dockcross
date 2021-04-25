@@ -6,7 +6,7 @@ FROM dockcross/manylinux2014-x64:latest
 
 # This is for 64-bit ARM Manylinux machine
 
-#include "common-manylinux.crosstool"
+# This is for 64-bit ARM Manylinux machine
 
 # The cross-compiling emulator
 RUN \
@@ -16,10 +16,14 @@ RUN \
     qemu-system-arm && \
   yum clean all
 
-# The CROSS_TRIPLE is a configured alias of the "aarch64-unknown-linux-gnueabi" target.
-ENV CROSS_TRIPLE aarch64-unknown-linux-gnueabi
+ENV XCC_PREFIX /usr/xcc
+ENV CROSS_TRIPLE aarch64-linux-musl
+ENV CROSS_ROOT ${XCC_PREFIX}/${CROSS_TRIPLE}-cross
 
-ENV CROSS_ROOT ${XCC_PREFIX}/${CROSS_TRIPLE}
+RUN mkdir -p ${XCC_PREFIX}
+RUN curl -LO http://musl.cc/${CROSS_TRIPLE}-cross.tgz
+RUN tar -C ${XCC_PREFIX} -xvf ${CROSS_TRIPLE}-cross.tgz
+
 ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
     AR=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-ar \
     CC=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-gcc \
