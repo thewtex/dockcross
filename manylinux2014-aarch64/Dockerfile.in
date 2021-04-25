@@ -4,7 +4,8 @@
 # For more details, read https://github.com/dockcross/dockcross/issues/367
 FROM dockcross/manylinux2014-x64:latest
 
-# This is for 64-bit ARM Manylinux machine
+# Provide Python builds for aarch64 to build against
+COPY --from=quay.io/pypa/manylinux2014_aarch64:latest /opt/python /opt/python
 
 # This is for 64-bit ARM Manylinux machine
 
