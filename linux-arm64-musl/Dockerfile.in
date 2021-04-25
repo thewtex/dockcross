@@ -1,5 +1,12 @@
 FROM dockcross/base:latest
 
+# The cross-compiling emulator
+RUN apt-get update \
+&& apt-get install -y \
+  qemu-user \
+  qemu-user-static \
+&& apt-get clean --yes
+
 ENV XCC_PREFIX /usr/xcc
 ENV CROSS_TRIPLE aarch64-linux-musl
 ENV CROSS_ROOT ${XCC_PREFIX}/${CROSS_TRIPLE}-cross
