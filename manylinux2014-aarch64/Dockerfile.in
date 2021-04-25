@@ -2,7 +2,7 @@
 # run the container on a x86_64 host.
 # This image is not based on "pypa/manylinux2014_aarch64" because it would require the host to be aarch64.
 # For more details, read https://github.com/dockcross/dockcross/issues/367
-FROM dockcross/manylinux2014-x64
+FROM dockcross/manylinux2014-x64:latest
 
 # This is for 64-bit ARM Manylinux machine
 
@@ -44,16 +44,6 @@ ENV ARCH arm64
 ENV AUDITWHEEL_ARCH aarch64
 ENV AUDITWHEEL_PLAT manylinux2014_$AUDITWHEEL_ARCH
 
-# Build-time metadata as defined at http://label-schema.org
-ARG BUILD_DATE
 ARG IMAGE=dockcross/manylinux2014-aarch64
-ARG VERSION=latest
-ARG VCS_REF
-ARG VCS_URL
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$IMAGE \
-      org.label-schema.version=$VERSION \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.schema-version="1.0"
-ENV DEFAULT_DOCKCROSS_IMAGE ${IMAGE}:${VERSION}
+
+#include "common.label-and-env"
