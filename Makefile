@@ -122,7 +122,7 @@ manylinux2014-aarch64: manylinux2014-aarch64/Dockerfile
 
 manylinux2014-aarch64.test: manylinux2014-aarch64
 	$(DOCKER) run $(RM) dockcross/manylinux2014-aarch64 > $(BIN)/dockcross-manylinux2014-aarch64 && chmod +x $(BIN)/dockcross-manylinux2014-aarch64
-	$(BIN)/dockcross-manylinux2014-aarch64 /opt/python/cp38-cp38/bin/python test/run.py
+	$(BIN)/dockcross-manylinux2014-aarch64 /usr/bin/python test/run.py
 
 #
 # manylinux2014-x64

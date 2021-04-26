@@ -4,10 +4,17 @@
 # For more details, read https://github.com/dockcross/dockcross/issues/367
 FROM dockcross/manylinux2014-x64:latest
 
+RUN rm -rf /opt/python /opt/_internal
+
 # Provide Python builds for aarch64 to build against
+COPY --from=quay.io/pypa/manylinux2014_aarch64:latest /opt/_internal /opt/_internal
 COPY --from=quay.io/pypa/manylinux2014_aarch64:latest /opt/python /opt/python
 
-# This is for 64-bit ARM Manylinux machine
+# Libraries needed to run python3 with qemu
+RUN mkdir -p /usr/local/aarch64/lib
+COPY --from=quay.io/pypa/manylinux2014_aarch64:latest /lib/ld-linux-aarch64.so.1 /lib/
+COPY --from=quay.io/pypa/manylinux2014_aarch64:latest /lib64/ /usr/local/aarch64/lib/
+COPY --from=quay.io/pypa/manylinux2014_aarch64:latest /usr/local/lib/ /usr/local/aarch64/lib/
 
 # The cross-compiling emulator
 RUN \
@@ -15,7 +22,18 @@ RUN \
   yum -y install \
     qemu-user \
     qemu-system-arm && \
-  yum clean all
+    yum clean all
+
+# Makes the manylinux2014_aarch64 libraries available
+COPY manylinux2014-aarch64/qemu-aarch64-wrapper.sh /usr/local/bin/
+# Script from
+# https://github.com/qemu/qemu/blob/master/scripts/qemu-binfmt-conf.sh
+# Used to register the wrapper in the Linux kernel to automatically run aarch64
+# binaries with the QEMU User emulator.
+# docker must be started with the --privileged flag to run. In dockcross, this
+# means passing the `-a "--privileged"` argument to the dockcross script.
+# Invoke as `sudo qemu-binfmt-conf.sh --qemu-suffix=-wrapper.sh`
+COPY manylinux2014-aarch64/qemu-binfmt-conf.sh /usr/local/bin/
 
 ENV XCC_PREFIX /usr/xcc
 ENV CROSS_TRIPLE aarch64-linux-musl
