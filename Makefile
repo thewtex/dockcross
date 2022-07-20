@@ -81,6 +81,9 @@ SHELLCHECK := shellcheck
 # Defines the level of verification (error, warning, info...)
 SHELLCHECK_SEVERITY_LEVEL := error
 
+# Ensures locally built image is used
+PULL = --pull never
+
 #
 # images: This target builds all IMAGES (because it is the first one, it is built by default)
 #
@@ -280,7 +283,7 @@ bash-check:
 $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
 	$(DOCKER) run $(RM) $(ORG)/$(basename $@) > $(BIN)/dockcross-$(basename $@) \
 		&& chmod +x $(BIN)/dockcross-$(basename $@)
-	$(BIN)/dockcross-$(basename $@) python3 test/run.py $($@_ARGS)
+	$(BIN)/dockcross-$(basename $@) --args "$(PULL)" python3 test/run.py $($@_ARGS)
 
 #
 # testing prerequisites implicit rule
