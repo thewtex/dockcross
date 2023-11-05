@@ -44,6 +44,6 @@ ENV PKG_CONFIG_PATH /usr/lib/riscv64-unknown-linux-gnu/pkgconfig
 # Linux kernel cross compilation variables
 ENV PATH ${PATH}:${CROSS_ROOT}/bin
 ENV CROSS_COMPILE ${CROSS_TRIPLE}-
-ENV ARCH powerpc
+ENV ARCH riscv64
 
 #include "common.label-and-env"
