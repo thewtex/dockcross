@@ -1146,7 +1146,7 @@ jobs:
         run: |
           git clone --depth 1 --branch v3.11.2 https://github.com/python/cpython.git
           cd cpython
-          ./../tools/dockcross-command.sh ${{ matrix.arch_name.image }} ./configure ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no --disable-ipv6 ${{ matrix.arch_name.cpython_arg }} --build=x86_64-linux-gnu --enable-shared
+          ./../tools/dockcross-command.sh ${{ matrix.arch_name.image }} ./configure ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no --disable-ipv6 ${{ matrix.arch_name.cpython_arg }} --build=x86_64-linux-gnu --with-build-python --enable-shared
           ./../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} -j2
           cd ..
           rm -rf cpython
