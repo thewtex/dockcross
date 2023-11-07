@@ -61,7 +61,7 @@ RUN \
     patch \
     perl \
     pkg-config \
-    python \
+    python3 \
     ruby \
     scons \
     sed \
