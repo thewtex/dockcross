@@ -6,10 +6,10 @@ LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
 ARG CLANG_VERSION=14
 ENV CLANG_VERSION=${CLANG_VERSION}
 
-RUN echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main" >> /etc/apt/sources.list \
-    && echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-${CLANG_VERSION} main" >> /etc/apt/sources.list \
-    && echo "deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main" >> /etc/apt/sources.list \
-    && echo "deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-${CLANG_VERSION}  main" >> /etc/apt/sources.list \
+RUN echo "deb http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm main" >> /etc/apt/sources.list \
+    && echo "deb http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-${CLANG_VERSION} main" >> /etc/apt/sources.list \
+    && echo "deb-src http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm main" >> /etc/apt/sources.list \
+    && echo "deb-src http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-${CLANG_VERSION}  main" >> /etc/apt/sources.list \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
     && apt-get update \
     && apt-get -y install clang-${CLANG_VERSION} libc++-${CLANG_VERSION}-dev libc++abi-${CLANG_VERSION}-dev clang-format-${CLANG_VERSION} clang-tidy-${CLANG_VERSION} lldb-${CLANG_VERSION} liblld-${CLANG_VERSION}-dev \
