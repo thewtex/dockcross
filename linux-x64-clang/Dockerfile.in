@@ -3,13 +3,13 @@ FROM ${ORG}/base:latest
 
 LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
 
-ARG CLANG_VERSION=14
+ARG CLANG_VERSION=15
 ENV CLANG_VERSION=${CLANG_VERSION}
 
-RUN echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main" >> /etc/apt/sources.list \
-    && echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-${CLANG_VERSION} main" >> /etc/apt/sources.list \
-    && echo "deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main" >> /etc/apt/sources.list \
-    && echo "deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-${CLANG_VERSION}  main" >> /etc/apt/sources.list \
+RUN echo "deb http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm main" >> /etc/apt/sources.list.d/llvm.list \
+    && echo "deb http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-${CLANG_VERSION} main" >> /etc/apt/sources.list.d/llvm.list \
+    && echo "deb-src http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm main" >> /etc/apt/sources.list.d/llvm.list \
+    && echo "deb-src http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-${CLANG_VERSION}  main" >> /etc/apt/sources.list.d/llvm.list \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
     && apt-get update \
     && apt-get -y install clang-${CLANG_VERSION} libc++-${CLANG_VERSION}-dev libc++abi-${CLANG_VERSION}-dev clang-format-${CLANG_VERSION} clang-tidy-${CLANG_VERSION} lldb-${CLANG_VERSION} liblld-${CLANG_VERSION}-dev \
@@ -18,6 +18,7 @@ RUN echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main" >> /et
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${CLANG_VERSION} 90 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${CLANG_VERSION} 90 \
+    && update-alternatives --remove-all cpp \
     && update-alternatives --install /usr/bin/cpp cpp /usr/bin/clang++-${CLANG_VERSION} 90 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${CLANG_VERSION} 90 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${CLANG_VERSION} 90 \

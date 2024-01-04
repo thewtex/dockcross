@@ -2,7 +2,7 @@ ARG ORG=dockcross
 FROM ${ORG}/base:latest
 MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
 RUN \
-  sed -i '/debian-security/d' /etc/apt/sources.list && \
+  echo Enabled: no >> /etc/apt/sources.list.d/debian.sources && \
   dpkg --add-architecture arm64 && \
   apt-get update
 
