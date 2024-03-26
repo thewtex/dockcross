@@ -4,7 +4,7 @@
 #
 
 # Name of the docker executable
-DOCKER := docker
+DOCKER := $(or $(OCI_EXE), docker)
 
 # Docker organization to pull the images from
 ORG = dockcross
