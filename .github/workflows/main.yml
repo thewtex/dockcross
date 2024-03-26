@@ -24,7 +24,15 @@ jobs:
           submodules: "recursive"
           fetch-depth: 1
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: build
+        env:
+          BUILD_CMD: buildx build --platform linux/amd64,linux/arm64
         run: make base
 
       - name: test
