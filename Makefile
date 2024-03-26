@@ -6,6 +6,13 @@
 # Name of the docker executable
 DOCKER := $(or $(OCI_EXE), docker)
 
+# The build sub-command. Use:
+#
+#   export "BUILD_CMD=buildx build --platform linux/amd64,linux/arm64"
+#
+# to generate multi-platform images.
+BUILD_CMD := $(or $(BUILD_CMD), build)
+
 # Docker organization to pull the images from
 ORG = dockcross
 
@@ -118,8 +125,7 @@ $(GEN_IMAGE_DOCKERFILES) Dockerfile: %Dockerfile: %Dockerfile.in $(DOCKER_COMPOS
 web-wasm: web-wasm/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	cp -r test web-wasm/
-	$(DOCKER) buildx build -t $(ORG)/web-wasm:$(TAG) \
-		--platform linux/amd64,linux/arm64 \
+	$(DOCKER) $(BUILD_CMD) -t $(ORG)/web-wasm:$(TAG) \
 		-t $(ORG)/web-wasm:latest \
 		--build-arg IMAGE=$(ORG)/web-wasm \
 		--build-arg VERSION=$(TAG) \
