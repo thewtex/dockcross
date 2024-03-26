@@ -254,7 +254,7 @@ $(VERBOSE).SILENT: display_images
 
 $(STANDARD_IMAGES): %: %/Dockerfile base
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(DOCKER) build -t $(ORG)/$@:latest \
+	$(DOCKER) $(BUILD_CMD) -t $(ORG)/$@:latest \
 		-t $(ORG)/$@:$(TAG) \
 		--build-arg ORG=$(ORG) \
 		--build-arg IMAGE=$(ORG)/$@ \
