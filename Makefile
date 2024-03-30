@@ -4,7 +4,14 @@
 #
 
 # Name of the docker executable
-DOCKER := docker
+DOCKER := $(or $(OCI_EXE), docker)
+
+# The build sub-command. Use:
+#
+#   export "BUILD_CMD=buildx build --platform linux/amd64,linux/arm64"
+#
+# to generate multi-platform images.
+BUILD_CMD := $(or $(BUILD_CMD), build)
 
 # Docker organization to pull the images from
 ORG = dockcross
@@ -118,7 +125,7 @@ $(GEN_IMAGE_DOCKERFILES) Dockerfile: %Dockerfile: %Dockerfile.in $(DOCKER_COMPOS
 web-wasm: web-wasm/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	cp -r test web-wasm/
-	$(DOCKER) build -t $(ORG)/web-wasm:$(TAG) \
+	$(DOCKER) $(BUILD_CMD) -t $(ORG)/web-wasm:$(TAG) \
 		-t $(ORG)/web-wasm:latest \
 		--build-arg IMAGE=$(ORG)/web-wasm \
 		--build-arg VERSION=$(TAG) \
@@ -225,7 +232,7 @@ manylinux2014-x86.test: manylinux2014-x86
 # base
 #
 base: Dockerfile imagefiles/
-	$(DOCKER) build -t $(ORG)/base:latest \
+	$(DOCKER) $(BUILD_CMD) -t $(ORG)/base:latest \
 		-t $(ORG)/base:$(TAG) \
 		--build-arg IMAGE=$(ORG)/base \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
@@ -247,7 +254,7 @@ $(VERBOSE).SILENT: display_images
 
 $(STANDARD_IMAGES): %: %/Dockerfile base
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
-	$(DOCKER) build -t $(ORG)/$@:latest \
+	$(DOCKER) $(BUILD_CMD) -t $(ORG)/$@:latest \
 		-t $(ORG)/$@:$(TAG) \
 		--build-arg ORG=$(ORG) \
 		--build-arg IMAGE=$(ORG)/$@ \
