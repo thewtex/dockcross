@@ -1,0 +1,11 @@
+ARG ORG=dockcross
+FROM ${ORG}/web-wasi:latest
+
+LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
+
+ENV CROSS_TRIPLE=wasm32-wasi-threads
+
+COPY Toolchain.cmake ${CROSS_ROOT}/
+ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/Toolchain.cmake
+
+#include "common.label-and-env"

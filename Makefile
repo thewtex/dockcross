@@ -37,7 +37,7 @@ GEN_IMAGES := android-arm android-arm64 \
 	manylinux_2_28-x64 \
 	manylinux2014-x64 manylinux2014-x86 \
 	manylinux2014-aarch64 linux-arm64-lts \
-	web-wasm web-wasi linux-mips linux-mips-uclibc linux-mips-lts windows-arm64 windows-armv7 \
+	web-wasm web-wasi web-wasi-threads linux-mips linux-mips-uclibc linux-mips-lts windows-arm64 windows-armv7 \
 	windows-static-x86 windows-static-x64 windows-static-x64-posix \
 	windows-shared-x86 windows-shared-x64 windows-shared-x64-posix \
 	linux-armv7 linux-armv7a linux-armv7l-musl linux-armv7-lts linux-armv7a-lts linux-x86_64-full \
@@ -50,7 +50,7 @@ GEN_IMAGE_DOCKERFILES = $(addsuffix /Dockerfile,$(GEN_IMAGES))
 
 # These images are expected to have explicit rules for *both* build and testing
 NON_STANDARD_IMAGES := manylinux_2_28-x64 manylinux2014-x64 manylinux2014-x86 \
-		      manylinux2014-aarch64 web-wasm
+		      manylinux2014-aarch64 web-wasm web-wasi-threads
 
 # Docker composite files
 DOCKER_COMPOSITE_SOURCES = common.docker common.debian common.manylinux2014 common.manylinux_2_28 common.buildroot \
@@ -142,6 +142,26 @@ web-wasm.test: web-wasm
 	$(BIN)/dockcross-web-wasm -i $(ORG)/web-wasm:latest python test/run.py --exe-suffix ".js"
 	rm -rf web-wasm/test
 
+#
+# web-wasi-threads
+#
+web-wasi-threads: web-wasi web-wasi-threads/Dockerfile
+	mkdir -p $@/imagefiles && cp -r imagefiles $@/
+	cp -r test web-wasi-threads/
+	$(DOCKER) $(BUILD_CMD) -t $(ORG)/web-wasi-threads:$(TAG) \
+		-t $(ORG)/web-wasi-threads:latest \
+		--build-arg IMAGE=$(ORG)/web-wasi-threads \
+		--build-arg VERSION=$(TAG) \
+		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--build-arg VCS_URL=`git config --get remote.origin.url` \
+		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+		web-wasi-threads
+
+web-wasi-threads.test: web-wasi-threads
+	$(DOCKER) run $(RM) $(ORG)/web-wasi-threads:latest > $(BIN)/dockcross-web-wasi-threads \
+		&& chmod +x $(BIN)/dockcross-web-wasi-threads
+	$(BIN)/dockcross-web-wasi-threads -i $(ORG)/web-wasi-threads:latest python3 test/run.py
+	rm -rf web-wasi-threads/test
 #
 # manylinux2014-aarch64
 #

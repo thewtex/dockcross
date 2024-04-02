@@ -1039,6 +1039,25 @@ jobs:
               cpython: "no",
               cpython_arg: "",
             }
+          - {
+              image: "web-wasi-threads",
+              stockfish: "no",
+              stockfish_arg: "",
+              ninja: "no",
+              ninja_arg: "",
+              openssl: "no",
+              openssl_arg: "linux-generic64 no-asm no-threads no-engine no-hw no-weak-ssl-ciphers no-dtls no-shared no-dso",
+              C: "no",
+              C_arg: "",
+              C-Plus-Plus: "no",
+              C-Plus-Plus_arg: "",
+              fmt: "no",
+              fmt_arg: "",
+              raylib: "no",
+              raylib_arg: "",
+              cpython: "no",
+              cpython_arg: "",
+            }
           # Bare metal images
           - {
               image: "bare-armv7emhf-nano_newlib",
