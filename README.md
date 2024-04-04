@@ -157,7 +157,7 @@ The list of docker images that are **no longer maintained**.
 
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/dockcross/base/latest) ![Docker Pulls](https://img.shields.io/docker/pulls/dockcross/base) ![Docker Stars](https://img.shields.io/docker/stars/dockcross/base)
 
-Base image for other toolchain images. From Debian Jessie with GCC, make, autotools, CMake, Ninja, Git, and Python.
+Base image for other toolchain images. From Debian Bookworm with GCC, make, autotools, CMake, Ninja, Git, and Python.
 
 ### dockcross/android-arm
 
