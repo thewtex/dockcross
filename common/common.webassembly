@@ -2,8 +2,8 @@
 #
 # Common WebAssembly tools.
 
-# main 2022-12-27
-ENV BINARYEN_GIT_TAG cec66beba45668dbad74abd2396bb80d33595ff0
+# main 2024-04-02
+ENV BINARYEN_GIT_TAG 4e2ebbd6de6f99e5972654b3f50ddbc1c6839a73
 RUN git clone --recursive https://github.com/WebAssembly/binaryen.git && \
   cd binaryen && \
   git checkout ${BINARYEN_GIT_TAG} && \
@@ -22,8 +22,8 @@ RUN git clone --recursive https://github.com/WebAssembly/binaryen.git && \
   cd ../ && \
   rm -rf binaryen*
 
-# main 2023-03-16
-ENV WABT_GIT_TAG 090d4674c86b00e31d18e77f2c8f8570a68e1cf1
+# main 2024-04-02
+ENV WABT_GIT_TAG 356931a867c7d642bc282fff46a1c95ab0e843f3
 RUN git clone --recurse-submodules https://github.com/WebAssembly/wabt.git && \
   cd wabt && \
   git checkout ${WABT_GIT_TAG} && \
@@ -47,6 +47,7 @@ RUN mkdir /wasi-runtimes
 ENV WASMTIME_HOME /wasi-runtimes/wasmtime
 RUN mkdir ${WASMTIME_HOME} && curl https://wasmtime.dev/install.sh -sSf | bash
 COPY imagefiles/wasmtime-pwd.sh ${WASMTIME_HOME}/bin/
+COPY imagefiles/wasmtime-pwd-threads.sh ${WASMTIME_HOME}/bin/
 ENV PATH "$WASMTIME_HOME/bin:$PATH"
 
 # For wasmer

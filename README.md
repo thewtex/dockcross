@@ -122,6 +122,7 @@ The dockcross script will execute the given command-line inside the container, a
 | dockcross/linux-x64-tinycc | x86_64 | tinycc + GCC | Linux |
 | dockcross/web-wasm | Wasm | LLVM | Web (JS) |
 | dockcross/web-wasi | Wasm | LLVM | Web (Universal) |
+| dockcross/web-wasi-threads | Wasm | LLVM | Web (Universal) |
 | dockcross/windows-shared-x86 | x86 | GCC | Windows |
 | dockcross/windows-shared-x64 | x86_64 | GCC | Windows |
 | dockcross/windows-shared-x64-posix | x86_64 | GCC | Windows |
@@ -402,6 +403,12 @@ The [Emscripten](https://emscripten.org/) [WebAssembly](https://webassembly.org/
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/dockcross/web-wasi/latest) ![Docker Pulls](https://img.shields.io/docker/pulls/dockcross/web-wasi)
 
 The [WebAssembly System Interface (WASI)](https://wasi.dev/) SDK LLVM/Clang/WASI Sysroot cross compiler.
+
+### dockcross/web-wasi-threads
+
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/dockcross/web-wasi-threads/latest) ![Docker Pulls](https://img.shields.io/docker/pulls/dockcross/web-wasi-threads)
+
+The [WebAssembly System Interface (WASI)](https://wasi.dev/) SDK LLVM/Clang/WASI Sysroot cross compiler with the toolchain configured to enable the wasm threading proposal.
 
 ### dockcross/windows-static-x64
 
