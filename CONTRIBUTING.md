@@ -67,7 +67,7 @@ We will take the example of `aarch64-rpi4-linux-gnu`, a `.config` file will be c
 *Alternatively*, we could copy an existing `crosstool-ng.config` from one of the target folders in the `dockcross` project to the local `.config`:
 
 ```bash
-cp path/to/dockcross/linux-arm64 .config
+cp path/to/dockcross/linux-arm64/crosstool-ng.config .config
 ```
 
 We will configure the toolchains according to our needs:
