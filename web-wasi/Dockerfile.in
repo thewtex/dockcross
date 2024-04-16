@@ -3,7 +3,7 @@ FROM ${ORG}/base:latest
 
 LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
 
-ENV LLVM_VERSION 17
+ENV LLVM_VERSION 18
 
 # Build LLVM / Clang that supports our glibc
 RUN apt-get update && \
@@ -18,7 +18,7 @@ RUN apt-get update && \
     apt-get install -y clang-${LLVM_VERSION} lld-${LLVM_VERSION} && \
     rm -rf /var/lib/apt/lists/*
 
-ENV WASI_VERSION 21
+ENV WASI_VERSION 22
 ENV WASI_VERSION_FULL ${WASI_VERSION}.0
 RUN cd /usr/ && \
   curl -L -O https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${WASI_VERSION}/wasi-sdk-${WASI_VERSION_FULL}-linux.tar.gz && \
