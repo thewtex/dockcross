@@ -751,7 +751,7 @@ jobs:
           - {
               image: "linux-ppc",
               stockfish: "yes",
-              stockfish_arg: "ARCH=ppc",
+              stockfish_arg: "ARCH=ppc-32",
               ninja: "yes",
               ninja_arg: "",
               openssl: "yes",
