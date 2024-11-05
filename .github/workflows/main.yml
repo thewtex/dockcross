@@ -750,8 +750,8 @@ jobs:
             # Linux ppc images
           - {
               image: "linux-ppc",
-              stockfish: "yes",
-              stockfish_arg: "ARCH=ppc-32",
+              stockfish: "no",
+              stockfish_arg: "",
               ninja: "yes",
               ninja_arg: "",
               openssl: "yes",
@@ -780,9 +780,9 @@ jobs:
               openssl_arg: "linux-ppc64",
               C: "yes",
               C_arg: "",
-              C-Plus-Plus: "no",
+              C-Plus-Plus: "yes",
               C-Plus-Plus_arg: "",
-              llama_cpp: "yes",
+              llama_cpp: no",
               llama_cpp_arg: "",
               fmt: "yes",
               fmt_arg: "",
