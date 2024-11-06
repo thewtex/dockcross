@@ -769,28 +769,6 @@ jobs:
               cpython: "yes",
               cpython_arg: "--host=powerpc-unknown-linux-gnu --target=powerpc-unknown-linux-gnu",
             }
-            # Linux ppc64 images
-          - {
-              image: "linux-ppc64",
-              stockfish: "yes",
-              stockfish_arg: "ARCH=ppc-64",
-              ninja: "yes",
-              ninja_arg: "",
-              openssl: "yes",
-              openssl_arg: "linux-ppc64",
-              C: "yes",
-              C_arg: "",
-              C-Plus-Plus: "yes",
-              C-Plus-Plus_arg: "",
-              llama_cpp: no",
-              llama_cpp_arg: "",
-              fmt: "yes",
-              fmt_arg: "",
-              raylib: "no",
-              raylib_arg: "",
-              cpython: "yes",
-              cpython_arg: "--host=powerpc64-unknown-linux-gnu --target=powerpc64-unknown-linux-gnu",
-            }
           # Linux ppc64le images
           - {
               image: "linux-ppc64le",
