@@ -105,6 +105,7 @@ The dockcross script will execute the given command-line inside the container, a
 | dockcross/linux-mips-lts | mips | GCC 8.5.0 + Glibc 2.28 | Linux |
 | dockcross/linux-mipsel-lts | mipsel | GCC 8.5.0 + Glibc 2.28 | Linux |
 | dockcross/linux-s390x | s390x | GCC | Linux |
+| dockcross/linux-ppc | ppc | GCC | Linux |
 | dockcross/linux-ppc64le | ppc64le | GCC | Linux |
 | dockcross/linux-ppc64le-lts | ppc64le | GCC 8.5.0 + Glibc 2.28 | Linux |
 | dockcross/linux-riscv32 | riscv32 | GCC | Linux |
@@ -319,6 +320,12 @@ Linux risc-v 32bit cross compiler toolchain for risc-v 32bit GNU systems.
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/dockcross/linux-m68k-uclibc/latest) ![Docker Pulls](https://img.shields.io/docker/pulls/dockcross/linux-m68k-uclibc)
 
 Linux m68k cross compiler toolchain for m68k GNU systems (http://www.mac.linux-m68k.org/ and http://www.linux-m68k.org/).
+
+### dockcross/linux-ppc
+
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/dockcross/linux-ppc/latest) ![Docker Pulls](https://img.shields.io/docker/pulls/dockcross/linux-ppc)
+
+Linux PowerPC cross compiler toolchain for CPUs like the G3, G4, etc.
 
 ### dockcross/linux-ppc64le
 

@@ -747,6 +747,28 @@ jobs:
               cpython: "yes",
               cpython_arg: "--host=mips-unknown-linux-gnu --target=mips-unknown-linux-gnu",
             }
+            # Linux ppc images
+          - {
+              image: "linux-ppc",
+              stockfish: "no",
+              stockfish_arg: "",
+              ninja: "yes",
+              ninja_arg: "",
+              openssl: "yes",
+              openssl_arg: "linux-ppc",
+              C: "yes",
+              C_arg: "",
+              C-Plus-Plus: "no",
+              C-Plus-Plus_arg: "",
+              llama_cpp: "yes",
+              llama_cpp_arg: "",
+              fmt: "yes",
+              fmt_arg: "",
+              raylib: "no",
+              raylib_arg: "",
+              cpython: "yes",
+              cpython_arg: "--host=powerpc-unknown-linux-gnu --target=powerpc-unknown-linux-gnu",
+            }
           # Linux ppc64le images
           - {
               image: "linux-ppc64le",
@@ -1212,7 +1234,7 @@ jobs:
           git clone --depth 1 --branch sf_15 https://github.com/official-stockfish/Stockfish.git
           cd Stockfish/src
           ./../../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} net
-          ./../../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} build ${{ matrix.arch_name.stockfish_arg }} -j2
+          ./../../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} build ${{ matrix.arch_name.stockfish_arg }} -j${nproc}
           cd ../..
           rm -rf Stockfish
 
@@ -1233,7 +1255,7 @@ jobs:
           wget https://raw.githubusercontent.com/mavlink/MAVSDK/main/third_party/openssl/dockcross-android.patch
           patch -p 0 < dockcross-android.patch
           ./../tools/dockcross-command.sh ${{ matrix.arch_name.image }} ./Configure ${{ matrix.arch_name.openssl_arg }}
-          ./../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} -j2
+          ./../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} -j${nproc}
           cd ..
           rm -rf openssl
 
@@ -1287,7 +1309,7 @@ jobs:
           git clone --depth 1 --branch v3.11.2 https://github.com/python/cpython.git
           cd cpython
           ./../tools/dockcross-command.sh ${{ matrix.arch_name.image }} ./configure ac_cv_file__dev_ptmx=no ac_cv_file__dev_ptc=no --disable-ipv6 ${{ matrix.arch_name.cpython_arg }} --build=x86_64-linux-gnu --with-build-python --enable-shared
-          ./../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} -j2
+          ./../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} -j${nproc}
           cd ..
           rm -rf cpython
 
