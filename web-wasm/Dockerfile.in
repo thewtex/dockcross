@@ -1,7 +1,7 @@
 ARG DOCKER_IMAGE_VERSION=3.1.64
 FROM emscripten/emsdk:$DOCKER_IMAGE_VERSION
 
-LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
+LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
 # Revert back to "/bin/sh" as default shell
 # See https://github.com/asRIA/emscripten-docker/blob/master/Dockerfile.in#L4

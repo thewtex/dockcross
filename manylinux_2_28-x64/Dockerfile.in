@@ -1,7 +1,7 @@
 # Recent versions address yum functionality
 FROM quay.io/pypa/manylinux_2_28_x86_64:2024-07-20-e0def9a
 
-LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
+LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
 ENV DEFAULT_DOCKCROSS_IMAGE dockcross/manylinux_2_28-x64
 

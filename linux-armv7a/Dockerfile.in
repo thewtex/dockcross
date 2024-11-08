@@ -1,7 +1,7 @@
 ARG ORG=dockcross
 FROM ${ORG}/base:latest
 
-LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
+LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
 # This is for 32-bit ARMv7 Linux
 

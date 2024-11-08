@@ -130,7 +130,7 @@ Copy text to `Dockerfile.in` file:
 ARG ORG=dockcross
 FROM ${ORG}/base:latest
 
-LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
+LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
 # This is for 64-bit ARM Linux machine
 
@@ -185,7 +185,7 @@ ENV CROSS_TRIPLE aarch64-unknown-linux-gnu
 These lines also need to be changed:
 
 ```docker
-LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
+LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 ENV PKG_CONFIG_PATH /usr/lib/aarch64-linux-gnu/pkgconfig
 ENV ARCH arm64
 ```

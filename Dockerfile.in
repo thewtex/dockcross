@@ -1,7 +1,7 @@
 ARG DOCKER_IMAGE=debian:bookworm-slim
 FROM $DOCKER_IMAGE
 
-LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
+LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
 #include "common.debian"
 

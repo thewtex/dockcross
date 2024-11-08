@@ -1,7 +1,7 @@
 ARG ORG=dockcross
 FROM ${ORG}/web-wasi:latest
 
-LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
+LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
 ENV CROSS_TRIPLE=wasm32-wasi-threads
 
