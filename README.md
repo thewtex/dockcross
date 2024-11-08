@@ -321,9 +321,9 @@ Linux risc-v 32bit cross compiler toolchain for risc-v 32bit GNU systems.
 
 Linux m68k cross compiler toolchain for m68k GNU systems (http://www.mac.linux-m68k.org/ and http://www.linux-m68k.org/).
 
-### dockcross/linux-ppc64le
+### dockcross/linux-ppc
 
-![Docker Image Size (tag)](https://img.shields.io/docker/image-size/dockcross/linux-ppc64le/latest) ![Docker Pulls](https://img.shields.io/docker/pulls/dockcross/linux-ppc64le)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/dockcross/linux-ppc/latest) ![Docker Pulls](https://img.shields.io/docker/pulls/dockcross/linux-ppc)
 
 Linux PowerPC cross compiler toolchain for CPUs like the G3, G4, etc.
 
