@@ -5,7 +5,7 @@
 ARG ORG=dockcross
 FROM ${ORG}/manylinux2014-x64:latest
 
-LABEL maintainer="Matt McCormick matt.mccormick@kitware.com"
+LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
 # This is for 64-bit ARM Manylinux machine
 

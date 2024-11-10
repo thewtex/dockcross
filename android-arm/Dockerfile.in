@@ -1,6 +1,6 @@
 ARG ORG=dockcross
 FROM ${ORG}/base:latest
-MAINTAINER Matt McCormick "matt.mccormick@kitware.com"
+MAINTAINER Matt McCormick "matt@mmmccormick.com"
 
 # The cross-compiling emulator
 RUN apt-get update && apt-get install -y \
