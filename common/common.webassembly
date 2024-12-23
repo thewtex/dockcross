@@ -2,8 +2,8 @@
 #
 # Common WebAssembly tools.
 
-# main 2024-04-02
-ENV BINARYEN_GIT_TAG 4e2ebbd6de6f99e5972654b3f50ddbc1c6839a73
+# 2024-12, version 121
+ENV BINARYEN_GIT_TAG=353b759b230dff8fb82aeb157aeb6db360d74a49
 RUN git clone --recursive https://github.com/WebAssembly/binaryen.git && \
   cd binaryen && \
   git checkout ${BINARYEN_GIT_TAG} && \
@@ -14,6 +14,7 @@ RUN git clone --recursive https://github.com/WebAssembly/binaryen.git && \
     -DCMAKE_C_COMPILER=/usr/bin/cc \
     -DCMAKE_CXX_COMPILER=/usr/bin/c++ \
     -G Ninja \
+    -DENABLE_WERROR:BOOL=OFF \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
     -DCMAKE_TOOLCHAIN_FILE="" \
     ../binaryen && \
@@ -22,8 +23,8 @@ RUN git clone --recursive https://github.com/WebAssembly/binaryen.git && \
   cd ../ && \
   rm -rf binaryen*
 
-# main 2024-04-02
-ENV WABT_GIT_TAG 356931a867c7d642bc282fff46a1c95ab0e843f3
+# main 2024-12-23
+ENV WABT_GIT_TAG=ea193b40d6d4a1a697d68ae855b2b3b3e263b377
 RUN git clone --recurse-submodules https://github.com/WebAssembly/wabt.git && \
   cd wabt && \
   git checkout ${WABT_GIT_TAG} && \
@@ -44,11 +45,11 @@ RUN git clone --recurse-submodules https://github.com/WebAssembly/wabt.git && \
 
 RUN mkdir /wasi-runtimes
 
-ENV WASMTIME_HOME /wasi-runtimes/wasmtime
+ENV WASMTIME_HOME=/wasi-runtimes/wasmtime
 RUN mkdir ${WASMTIME_HOME} && curl https://wasmtime.dev/install.sh -sSf | bash
 COPY imagefiles/wasmtime-pwd.sh ${WASMTIME_HOME}/bin/
 COPY imagefiles/wasmtime-pwd-threads.sh ${WASMTIME_HOME}/bin/
-ENV PATH "$WASMTIME_HOME/bin:$PATH"
+ENV PATH="$WASMTIME_HOME/bin:$PATH"
 
 # For wasmer
 RUN \
@@ -56,20 +57,20 @@ RUN \
   apt-get install --no-install-recommends --yes \
     libxkbcommon0
 
-ENV WASMER_DIR /wasi-runtimes/wasmer
+ENV WASMER_DIR=/wasi-runtimes/wasmer
 RUN curl https://get.wasmer.io -sSfL | sh
 COPY imagefiles/wasmer-pwd.sh ${WASMER_DIR}/bin/
-ENV PATH "$WASMER_DIR/bin:$PATH"
+ENV PATH="$WASMER_DIR/bin:$PATH"
 
-ENV WASM3_VERSION 0.5.0
+ENV WASM3_VERSION=0.5.0
 RUN mkdir -p /wasi-runtimes/wasm3/bin && \
   curl -LO https://github.com/wasm3/wasm3/releases/download/v${WASM3_VERSION}/wasm3-linux-x64.elf && \
   mv wasm3-linux-x64.elf /wasi-runtimes/wasm3/bin/wasm3 && \
   chmod +x /wasi-runtimes/wasm3/bin/wasm3
-ENV PATH "/wasi-runtimes/wasm3/bin:$PATH"
+ENV PATH="/wasi-runtimes/wasm3/bin:$PATH"
 
-ENV WAVM_VERSION 2022-05-14
+ENV WAVM_VERSION=2022-05-14
 RUN mkdir -p /wasi-runtimes/wavm/ && \
   curl -LO https://github.com/WAVM/WAVM/releases/download/nightly%2F${WAVM_VERSION}/wavm-0.0.0-prerelease-linux.tar.gz && \
   tar -xv -C /wasi-runtimes/wavm/ -f wavm-0.0.0-prerelease-linux.tar.gz
-ENV PATH "/wasi-runtimes/wavm/bin:$PATH"
+ENV PATH="/wasi-runtimes/wavm/bin:$PATH"
