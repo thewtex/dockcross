@@ -3,44 +3,25 @@ FROM ${ORG}/base:latest
 
 LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
-ENV LLVM_VERSION 18
+ENV LLVM_VERSION=19
+ENV WASI_VERSION=25
+ENV WASI_VERSION_FULL=${WASI_VERSION}.0
 
-# Build LLVM / Clang that supports our glibc
-RUN apt-get update && \
-    # Temporarily install to setup apt repositories
-    apt-get install -y && \
-\
-    curl -sS https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor > /etc/apt/trusted.gpg.d/llvm.gpg && \
-    echo "deb [signed-by=/etc/apt/trusted.gpg.d/llvm.gpg] http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-${LLVM_VERSION} main" >> /etc/apt/sources.list.d/llvm.list && \
-    echo "deb-src [signed-by=/etc/apt/trusted.gpg.d/llvm.gpg] http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-${LLVM_VERSION} main" >> /etc/apt/sources.list.d/llvm.list && \
-\
-    apt-get update && \
-    apt-get install -y clang-${LLVM_VERSION} lld-${LLVM_VERSION} && \
-    rm -rf /var/lib/apt/lists/*
+COPY download-install-wasi-sdk.sh /usr/local/bin/
+RUN /usr/local/bin/download-install-wasi-sdk.sh
 
-ENV WASI_VERSION 22
-ENV WASI_VERSION_FULL ${WASI_VERSION}.0
-RUN cd /usr/ && \
-  curl -L -O https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${WASI_VERSION}/wasi-sdk-${WASI_VERSION_FULL}-linux.tar.gz && \
-  tar xvzf wasi-sdk-${WASI_VERSION_FULL}-linux.tar.gz && \
-  rm wasi-sdk-${WASI_VERSION_FULL}-linux.tar.gz
-RUN cd /usr/ && \
-  curl -L -O https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${WASI_VERSION}/libclang_rt.builtins-wasm32-wasi-${WASI_VERSION_FULL}.tar.gz && \
-  tar xvzf libclang_rt.builtins-wasm32-wasi-${WASI_VERSION_FULL}.tar.gz && \
-  rm libclang_rt.builtins-wasm32-wasi-${WASI_VERSION_FULL}.tar.gz && \
-  cp -r lib/wasi /usr/lib/llvm-${LLVM_VERSION}/lib/clang/${LLVM_VERSION}/lib/
-ENV WASI_SYSROOT /usr/wasi-sdk-${WASI_VERSION_FULL}/share/wasi-sysroot
-ENV WASI_SDK_PATH /usr/wasi-sdk-${WASI_VERSION_FULL}
+ENV WASI_SYSROOT=/opt/wasi-sdk/share/wasi-sysroot
+ENV WASI_SDK_PATH=/opt/wasi-sdk
 
 COPY clang-wasi-sysroot.sh clang++-wasi-sysroot.sh /usr/local/bin/
 
 ENV CROSS_TRIPLE=wasm32-wasi
 ENV CROSS_ROOT=${WASI_SDK_PATH}
-ENV AR=llvm-ar-${LLVM_VERSION} \
+ENV AR=${WASI_SDK_PATH}/bin/llvm-ar \
     CC=clang-wasi-sysroot.sh \
     CXX=clang++-wasi-sysroot.sh \
-    LD=wasm-ld-${LLVM_VERSION} \
-    RANLIB=llvm-ranlib-${LLVM_VERSION}
+    LD=${WASI_SDK_PATH}/bin/wasm-ld \
+    RANLIB=${WASI_SDK_PATH}/bin/llvm-ranlib
 
 #include "common.webassembly"
 
@@ -51,6 +32,6 @@ RUN mv /usr/src/*.cmake /usr/share/cmake-*/Modules/
 COPY CheckTypeSize.c.in /usr/src/
 RUN mv /usr/src/CheckTypeSize.c.in /usr/share/cmake-*/Modules/
 COPY Toolchain.cmake ${CROSS_ROOT}/
-ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/Toolchain.cmake
+ENV CMAKE_TOOLCHAIN_FILE=${CROSS_ROOT}/Toolchain.cmake
 
 #include "common.label-and-env"
