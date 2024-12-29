@@ -41,7 +41,6 @@ STANDARD_IMAGES := android-arm android-arm64 android-x86 android-x86_64 \
 	linux-armv6 linux-armv6-lts linux-armv6-musl linux-arm64-lts linux-mipsel-lts \
 	linux-armv7l-musl linux-armv7 linux-armv7a linux-armv7-lts linux-armv7a-lts linux-x86_64-full \
 	linux-mips linux-mips-uclibc linux-mips-lts linux-ppc linux-ppc64le linux-ppc64le-lts linux-riscv64 linux-riscv32 linux-xtensa-uclibc \
-	web-wasi \
 	windows-static-x86 windows-static-x64 windows-static-x64-posix windows-armv7 \
 	windows-shared-x86 windows-shared-x64 windows-shared-x64-posix windows-arm64 \
 	bare-armv7emhf-nano_newlib
@@ -62,7 +61,7 @@ GEN_IMAGES := android-arm android-arm64 \
 	bare-armv7emhf-nano_newlib
 
 # Generate both amd64 and arm64 images
-MULTIARCH_IMAGES := web-wasi web-wasi-threads
+MULTIARCH_IMAGES := web-wasi
 
 GEN_IMAGE_DOCKERFILES = $(addsuffix /Dockerfile,$(GEN_IMAGES))
 
@@ -78,7 +77,7 @@ DOCKER_COMPOSITE_FOLDER_PATH = common/
 DOCKER_COMPOSITE_PATH = $(addprefix $(DOCKER_COMPOSITE_FOLDER_PATH),$(DOCKER_COMPOSITE_SOURCES))
 
 # This list all available images
-IMAGES := $(STANDARD_IMAGES) $(NON_STANDARD_IMAGES)
+IMAGES := $(STANDARD_IMAGES) $(NON_STANDARD_IMAGES) $(MULTIARCH_IMAGES)
 
 # Optional arguments for test runner (test/run.py) associated with "testing implicit rule"
 linux-x64-tinycc.test_ARGS = --languages C
@@ -304,6 +303,19 @@ $(STANDARD_IMAGES): %: %/Dockerfile base
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	$(BUILD_DOCKER) $(BUILD_CMD) $(TAG_FLAG) $(ORG)/$@:latest \
 		$(TAG_FLAG) $(ORG)/$@:$(TAG) \
+		--build-arg ORG=$(ORG) \
+		--build-arg IMAGE=$(ORG)/$@ \
+		--build-arg VERSION=$(TAG) \
+		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--build-arg VCS_URL=`git config --get remote.origin.url` \
+		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+		$@
+	rm -rf $@/imagefiles
+
+$(MULTIARCH_IMAGES): %: %/Dockerfile base-$(HOST_ARCH)
+	mkdir -p $@/imagefiles && cp -r imagefiles $@/
+	$(BUILD_DOCKER) $(BUILD_CMD) $(TAG_FLAG) $(ORG)/$@:latest-$(HOST_ARCH) \
+		$(TAG_FLAG) $(ORG)/$@:$(TAG)-$(HOST_ARCH) \
 		--build-arg ORG=$(ORG) \
 		--build-arg IMAGE=$(ORG)/$@ \
 		--build-arg VERSION=$(TAG) \
