@@ -370,6 +370,12 @@ $(addsuffix .manifest,$(MULTIARCH_IMAGES)): $$(basename $$@)
 	$(BUILDAH) manifest create $(ORG)/$(basename $@)
 	$(BUILDAH) manifest add $(ORG)/$(basename $@) docker://$(ORG)/$(basename $@):latest-amd64
 	$(BUILDAH) manifest add $(ORG)/$(basename $@) docker://$(ORG)/$(basename $@):latest-arm64
+
+.SECONDEXPANSION:
+$(addsuffix .push,$(MULTIARCH_IMAGES)): $$(basename $$@).manifest
+	$(BUILDAH) manifest push --all --format v2s2 $(ORG)/$(basename $@) docker://$(ORG)/$(basename $@):latest
+	$(BUILDAH) manifest push --all --format v2s2 $(ORG)/$(basename $@) docker://$(ORG)/$(basename $@):$(TAG)
+
 #
 # testing prerequisites implicit rule
 #
