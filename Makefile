@@ -8,6 +8,7 @@
 # Common values: docker, podman, buildah
 DOCKER := $(or $(OCI_EXE), docker)
 BUILD_DOCKER := $(or $(BUILD_DOCKER), $(DOCKER))
+BUILDAH := $(or $(BUILDAH_EXE), buildah)
 # Name of the docker-equivalent executable for running test containers.
 # Supports the use case:
 #
@@ -361,6 +362,14 @@ $(addsuffix .test,$(MULTIARCH_IMAGES)): $$(basename $$@)
 $(addsuffix .push-$(HOST_ARCH),$(MULTIARCH_IMAGES)): $$(basename $$@)
 	$(BUILD_DOCKER) push $(ORG)/$(basename $@):latest-$(HOST_ARCH) \
 		&& $(BUILD_DOCKER) push $(ORG)/$(basename $@):$(TAG)-$(HOST_ARCH)
+
+.SECONDEXPANSION:
+$(addsuffix .manifest,$(MULTIARCH_IMAGES)): $$(basename $$@)
+	if $(BUILDAH) manifest exists $(ORG)/$(basename $@); then \
+		$(BUILDAH) manifest rm $(ORG)/$(basename $@); fi
+	$(BUILDAH) manifest create $(ORG)/$(basename $@)
+	$(BUILDAH) manifest add $(ORG)/$(basename $@) docker://$(ORG)/$(basename $@):latest-amd64
+	$(BUILDAH) manifest add $(ORG)/$(basename $@) docker://$(ORG)/$(basename $@):latest-arm64
 #
 # testing prerequisites implicit rule
 #
