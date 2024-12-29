@@ -351,6 +351,12 @@ $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
 		&& chmod +x $(BIN)/dockcross-$(basename $@)
 	$(BIN)/dockcross-$(basename $@) -i $(ORG)/$(basename $@):latest python3 test/run.py $($@_ARGS)
 
+.SECONDEXPANSION:
+$(addsuffix .test,$(MULTIARCH_IMAGES)): $$(basename $$@)
+	$(TEST_DOCKER) run $(RM) $(ORG)/$(basename $@):latest-$(HOST_ARCH) > $(BIN)/dockcross-$(basename $@) \
+		&& chmod +x $(BIN)/dockcross-$(basename $@)
+	$(BIN)/dockcross-$(basename $@) -i $(ORG)/$(basename $@):latest-$(HOST_ARCH) python3 test/run.py $($@_ARGS)
+
 #
 # testing prerequisites implicit rule
 #
