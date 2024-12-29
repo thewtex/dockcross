@@ -166,8 +166,8 @@ web-wasm.test: web-wasm
 web-wasi-threads: web-wasi web-wasi-threads/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	cp -r test web-wasi-threads/
-	$(BUILD_DOCKER) $(BUILD_CMD) $(TAG_FLAG) $(ORG)/web-wasi-threads:$(TAG) \
-		-t $(ORG)/web-wasi-threads:latest \
+	$(BUILD_DOCKER) $(BUILD_CMD) $(TAG_FLAG) $(ORG)/web-wasi-threads:$(TAG)-$(HOST_ARCH) \
+		-t $(ORG)/web-wasi-threads:latest-$(HOST_ARCH) \
 		--build-arg IMAGE=$(ORG)/web-wasi-threads \
 		--build-arg VERSION=$(TAG) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
@@ -175,11 +175,6 @@ web-wasi-threads: web-wasi web-wasi-threads/Dockerfile
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 		web-wasi-threads
 
-web-wasi-threads.test: web-wasi-threads
-	$(TEST_DOCKER) run $(RM) $(ORG)/web-wasi-threads:latest > $(BIN)/dockcross-web-wasi-threads \
-		&& chmod +x $(BIN)/dockcross-web-wasi-threads
-	$(BIN)/dockcross-web-wasi-threads -i $(ORG)/web-wasi-threads:latest python3 test/run.py
-	rm -rf web-wasi-threads/test
 #
 # manylinux2014-aarch64
 #
@@ -353,13 +348,13 @@ $(addsuffix .test,$(STANDARD_IMAGES)): $$(basename $$@)
 	$(BIN)/dockcross-$(basename $@) -i $(ORG)/$(basename $@):latest python3 test/run.py $($@_ARGS)
 
 .SECONDEXPANSION:
-$(addsuffix .test,$(MULTIARCH_IMAGES)): $$(basename $$@)
+$(addsuffix .test,$(MULTIARCH_IMAGES) web-wasi-threads): $$(basename $$@)
 	$(TEST_DOCKER) run $(RM) $(ORG)/$(basename $@):latest-$(HOST_ARCH) > $(BIN)/dockcross-$(basename $@) \
 		&& chmod +x $(BIN)/dockcross-$(basename $@)
 	$(BIN)/dockcross-$(basename $@) -i $(ORG)/$(basename $@):latest-$(HOST_ARCH) python3 test/run.py $($@_ARGS)
 
 .SECONDEXPANSION:
-$(addsuffix .push-$(HOST_ARCH),$(MULTIARCH_IMAGES)): $$(basename $$@)
+$(addsuffix .push-$(HOST_ARCH),$(MULTIARCH_IMAGES) web-wasi-threads): $$(basename $$@)
 	$(BUILD_DOCKER) push $(ORG)/$(basename $@):latest-$(HOST_ARCH) \
 		&& $(BUILD_DOCKER) push $(ORG)/$(basename $@):$(TAG)-$(HOST_ARCH)
 
