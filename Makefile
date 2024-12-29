@@ -28,6 +28,9 @@ TAG_FLAG := $(or $(TAG_FLAG), --tag)
 # Docker organization to pull the images from
 ORG = dockcross
 
+# Host architecture
+HOST_ARCH := $(shell uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
+
 # Directory where to generate the dockcross script for each images (e.g bin/dockcross-manylinux2014-x64)
 BIN = ./bin
 
@@ -57,6 +60,9 @@ GEN_IMAGES := android-arm android-arm64 \
 	linux-armv5 linux-armv5-musl linux-armv5-uclibc linux-ppc linux-ppc64le linux-ppc64le-lts linux-s390x \
 	linux-riscv64 linux-riscv32 linux-m68k-uclibc linux-x64-tinycc linux-xtensa-uclibc \
 	bare-armv7emhf-nano_newlib
+
+# Generate both amd64 and arm64 images
+MULTIARCH_IMAGES := web-wasi web-wasi-threads
 
 GEN_IMAGE_DOCKERFILES = $(addsuffix /Dockerfile,$(GEN_IMAGES))
 
@@ -261,8 +267,18 @@ manylinux2014-x86.test: manylinux2014-x86
 	$(BIN)/dockcross-manylinux2014-x86 -i $(ORG)/manylinux2014-x86:latest /opt/python/cp38-cp38/bin/python test/run.py
 
 #
-# base
+# base-$(HOST_ARCH)
 #
+base-$(HOST_ARCH): Dockerfile imagefiles/
+	$(BUILD_DOCKER) $(BUILD_CMD) $(TAG_FLAG) $(ORG)/base:latest-$(HOST_ARCH) \
+		$(TAG_FLAG) $(ORG)/base:$(TAG)-$(HOST_ARCH) \
+		--build-arg IMAGE=$(ORG)/base \
+		--build-arg VCS_URL=`git config --get remote.origin.url` \
+		.
+
+base-$(HOST_ARCH).test: base-$(HOST_ARCH)
+	$(TEST_DOCKER) run $(RM) $(ORG)/base:latest-$(HOST_ARCH) > $(BIN)/dockcross-base && chmod +x $(BIN)/dockcross-base
+
 base: Dockerfile imagefiles/
 	$(BUILD_DOCKER) $(BUILD_CMD) $(TAG_FLAG) $(ORG)/base:latest \
 		$(TAG_FLAG) $(ORG)/base:$(TAG) \
