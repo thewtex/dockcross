@@ -170,6 +170,7 @@ web-wasi-threads: web-wasi web-wasi-threads/Dockerfile
 		-t $(ORG)/web-wasi-threads:latest-$(HOST_ARCH) \
 		--build-arg IMAGE=$(ORG)/web-wasi-threads \
 		--build-arg VERSION=$(TAG) \
+		--build-arg HOST_ARCH=$(HOST_ARCH) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \

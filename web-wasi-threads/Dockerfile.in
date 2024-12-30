@@ -1,5 +1,6 @@
 ARG ORG=dockcross
-FROM ${ORG}/web-wasi:latest
+ARG HOST_ARCH=amd64
+FROM ${ORG}/web-wasi:latest-${HOST_ARCH}
 
 LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
