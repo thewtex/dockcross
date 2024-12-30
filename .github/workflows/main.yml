@@ -20,18 +20,12 @@ jobs:
           submodules: "recursive"
           fetch-depth: 1
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: build
-        env:
-          BUILD_CMD: buildx build --platform linux/amd64,linux/arm64
         run: make base
 
       - name: test
+        env:
+          OCI_EXE: docker
         run: make base.test
 
       - name: archive base
@@ -43,6 +37,62 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cache
+          path: ./cache
+          retention-days: 3
+
+      - name: deploy
+        if: github.ref == 'refs/heads/master'
+        run: |
+            docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+            docker image push dockcross/base --all-tags
+
+  base-multiarch:
+    name: base-multiarch
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 5
+      matrix:
+        os: [ubuntu-22.04, macos-15]
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+          fetch-depth: 1
+
+      - name: setup macos docker
+        if: ${{ matrix.os == 'macos-15' }}
+        run: |
+          # https://github.com/abiosoft/colima/issues/970
+          brew install qemu docker colima
+          LIMACTL_PATH=$(brew --prefix)/bin/limactl
+          sudo curl -L -o $LIMACTL_PATH https://github.com/mikekazakov/lima-nohvf/raw/master/limactl
+          sudo chmod +x $LIMACTL_PATH
+          colima start --network-address --arch arm64 --cpu 3 --memory 6
+
+      - name: build multiarch
+        run: |
+          host_arch=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
+          make base-${host_arch}
+
+      - name: test multiarch
+        env:
+          OCI_EXE: docker
+        run: |
+          host_arch=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
+          mkdir -p bin
+          make base-${host_arch}.test
+
+      - name: archive base
+        run: |
+          host_arch=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
+          mkdir -p cache
+          docker export dockcross/base:latest-${host_arch} | xz -e9 -T0 > ./cache/base.tar.xz
+
+      - name: save base
+        uses: actions/upload-artifact@v4
+        with:
+          name: cache-${{ matrix.os }}
           path: ./cache
           retention-days: 3
 
