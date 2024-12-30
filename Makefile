@@ -362,12 +362,12 @@ $(addsuffix .test,$(MULTIARCH_IMAGES) web-wasi-threads): $$(basename $$@)
 	$(BIN)/dockcross-$(basename $@) -i $(ORG)/$(basename $@):latest-$(HOST_ARCH) python3 test/run.py $($@_ARGS)
 
 .SECONDEXPANSION:
-$(addsuffix .push-$(HOST_ARCH),$(MULTIARCH_IMAGES) web-wasi-threads): $$(basename $$@)
+$(addsuffix .push-$(HOST_ARCH),$(MULTIARCH_IMAGES) web-wasi-threads web-wasm): $$(basename $$@)
 	$(BUILD_DOCKER) push $(ORG)/$(basename $@):latest-$(HOST_ARCH) \
 		&& $(BUILD_DOCKER) push $(ORG)/$(basename $@):$(TAG)-$(HOST_ARCH)
 
 .SECONDEXPANSION:
-$(addsuffix .manifest,$(MULTIARCH_IMAGES) web-wasi-threads): $$(basename $$@)
+$(addsuffix .manifest,$(MULTIARCH_IMAGES) web-wasi-threads web-wasm): $$(basename $$@)
 	if $(BUILDAH) manifest exists $(ORG)/$(basename $@); then \
 		$(BUILDAH) manifest rm $(ORG)/$(basename $@); fi
 	$(BUILDAH) manifest create $(ORG)/$(basename $@)
@@ -375,7 +375,7 @@ $(addsuffix .manifest,$(MULTIARCH_IMAGES) web-wasi-threads): $$(basename $$@)
 	$(BUILDAH) manifest add $(ORG)/$(basename $@) docker://$(ORG)/$(basename $@):latest-arm64
 
 .SECONDEXPANSION:
-$(addsuffix .push,$(MULTIARCH_IMAGES) web-wasi-threads): $$(basename $$@).manifest
+$(addsuffix .push,$(MULTIARCH_IMAGES) web-wasi-threads web-wasm): $$(basename $$@).manifest
 	$(BUILDAH) manifest push --all --format v2s2 $(ORG)/$(basename $@) docker://$(ORG)/$(basename $@):latest
 	$(BUILDAH) manifest push --all --format v2s2 $(ORG)/$(basename $@) docker://$(ORG)/$(basename $@):$(TAG)
 
