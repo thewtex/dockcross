@@ -140,13 +140,20 @@ $(GEN_IMAGE_DOCKERFILES) Dockerfile: %Dockerfile: %Dockerfile.in $(DOCKER_COMPOS
 #
 # web-wasm
 #
+ifeq ($(HOST_ARCH),amd64)
+  EMSCRIPTEN_HOST_ARCH_TAG = ""
+endif
+ifeq ($(HOST_ARCH),arm64)
+  EMSCRIPTEN_HOST_ARCH_TAG = "-arm64"
+endif
 web-wasm: web-wasm/Dockerfile
 	mkdir -p $@/imagefiles && cp -r imagefiles $@/
 	cp -r test web-wasm/
-	$(BUILD_DOCKER) $(BUILD_CMD) $(TAG_FLAG) $(ORG)/web-wasm:$(TAG) \
-		$(TAG_FLAG) $(ORG)/web-wasm:latest \
+	$(BUILD_DOCKER) $(BUILD_CMD) $(TAG_FLAG) $(ORG)/web-wasm:$(TAG)-$(HOST_ARCH) \
+		$(TAG_FLAG) $(ORG)/web-wasm:latest-$(HOST_ARCH) \
 		--build-arg IMAGE=$(ORG)/web-wasm \
 		--build-arg VERSION=$(TAG) \
+		--build-arg HOST_ARCH_TAG=$(EMSCRIPTEN_HOST_ARCH_TAG) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
@@ -156,8 +163,8 @@ web-wasm: web-wasm/Dockerfile
 
 web-wasm.test: web-wasm
 	cp -r test web-wasm/
-	$(TEST_DOCKER) run $(RM) $(ORG)/web-wasm:latest > $(BIN)/dockcross-web-wasm && chmod +x $(BIN)/dockcross-web-wasm
-	$(BIN)/dockcross-web-wasm -i $(ORG)/web-wasm:latest python test/run.py --exe-suffix ".js"
+	$(TEST_DOCKER) run $(RM) $(ORG)/web-wasm:latest-$(HOST_ARCH) > $(BIN)/dockcross-web-wasm && chmod +x $(BIN)/dockcross-web-wasm
+	$(BIN)/dockcross-web-wasm -i $(ORG)/web-wasm:latest-$(HOST_ARCH) python test/run.py --exe-suffix ".js"
 	rm -rf web-wasm/test
 
 #

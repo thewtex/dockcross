@@ -1,5 +1,6 @@
 ARG DOCKER_IMAGE_VERSION=3.1.74
-FROM emscripten/emsdk:$DOCKER_IMAGE_VERSION
+ARG HOST_ARCH_TAG
+FROM emscripten/emsdk:$DOCKER_IMAGE_VERSION$HOST_ARCH_TAG
 
 LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
