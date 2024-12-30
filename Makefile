@@ -37,7 +37,7 @@ BIN = ./bin
 
 # These images are built using the "build implicit rule"
 STANDARD_IMAGES := android-arm android-arm64 android-x86 android-x86_64 \
-	linux-i686 linux-x86 linux-x64 linux-x64-clang linux-arm64 linux-arm64-musl linux-arm64-full \
+	linux-i686 linux-x86 linux-x64 linux-x64-clang linux-arm64-musl linux-arm64-full \
 	linux-armv5 linux-armv5-musl linux-armv5-uclibc linux-m68k-uclibc linux-s390x linux-x64-tinycc \
 	linux-armv6 linux-armv6-lts linux-armv6-musl linux-arm64-lts linux-mipsel-lts \
 	linux-armv7l-musl linux-armv7 linux-armv7a linux-armv7-lts linux-armv7a-lts linux-x86_64-full \
@@ -62,7 +62,7 @@ GEN_IMAGES := android-arm android-arm64 \
 	bare-armv7emhf-nano_newlib
 
 # Generate both amd64 and arm64 images
-MULTIARCH_IMAGES := web-wasi
+MULTIARCH_IMAGES := web-wasi linux-arm64
 
 GEN_IMAGE_DOCKERFILES = $(addsuffix /Dockerfile,$(GEN_IMAGES))
 
