@@ -62,7 +62,8 @@ GEN_IMAGES := android-arm android-arm64 \
 	bare-armv7emhf-nano_newlib
 
 # Generate both amd64 and arm64 images
-MULTIARCH_IMAGES := web-wasi linux-arm64
+MULTIARCH_IMAGES :=  linux-arm64 \
+	web-wasi
 
 GEN_IMAGE_DOCKERFILES = $(addsuffix /Dockerfile,$(GEN_IMAGES))
 
@@ -322,6 +323,7 @@ $(MULTIARCH_IMAGES): %: %/Dockerfile base-$(HOST_ARCH)
 		$(TAG_FLAG) $(ORG)/$@:$(TAG)-$(HOST_ARCH) \
 		--build-arg ORG=$(ORG) \
 		--build-arg IMAGE=$(ORG)/$@ \
+		--build-arg HOST_ARCH=$(HOST_ARCH) \
 		--build-arg VERSION=$(TAG) \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg VCS_URL=`git config --get remote.origin.url` \
