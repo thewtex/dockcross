@@ -3,7 +3,11 @@ FROM ${ORG}/web-wasi:latest
 
 LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
+COPY clang-wasi-threads-sysroot.sh clang++-wasi-threads-sysroot.sh /usr/local/bin/
+
 ENV CROSS_TRIPLE=wasm32-wasi-threads
+ENV CC=clang-wasi-threads-sysroot.sh \
+    CXX=clang++-wasi-threads-sysroot.sh
 
 COPY Toolchain.cmake ${CROSS_ROOT}/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/Toolchain.cmake
