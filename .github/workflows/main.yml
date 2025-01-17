@@ -52,23 +52,13 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        os: [ubuntu-22.04, ubuntu-22.04-arm]
     steps:
       - name: checkout code
         uses: actions/checkout@v4
         with:
           submodules: "recursive"
           fetch-depth: 1
-
-      - name: setup macos docker
-        if: ${{ matrix.os == 'macos-15' }}
-        run: |
-          # https://github.com/abiosoft/colima/issues/970
-          brew install qemu docker colima
-          LIMACTL_PATH=$(brew --prefix)/bin/limactl
-          sudo curl -L -o $LIMACTL_PATH https://github.com/mikekazakov/lima-nohvf/raw/master/limactl
-          sudo chmod +x $LIMACTL_PATH
-          colima start --network-address --arch arm64 --cpu 3 --memory 6
 
       - name: build multiarch
         run: |
