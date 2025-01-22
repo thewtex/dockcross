@@ -1,0 +1,42 @@
+ARG ORG=dockcross
+ARG HOST_ARCH=amd64
+FROM ${ORG}/base:latest-${HOST_ARCH}
+
+LABEL maintainer="Matt McCormick matt@mmmccormick.com"
+
+ENV LLVM_VERSION=19
+ENV WASI_VERSION=25
+ENV WASI_VERSION_FULL=${WASI_VERSION}.0
+
+ENV WASMTIME_HOME=/wasi-runtimes/wasmtime
+RUN mkdir -p ${WASMTIME_HOME} && curl https://wasmtime.dev/install.sh -sSf | bash
+ENV PATH="$WASMTIME_HOME/bin:$PATH"
+
+COPY download-build-install-wasi-sdk.sh /usr/local/bin/
+RUN /usr/local/bin/download-build-install-wasi-sdk.sh
+
+ENV WASI_SYSROOT=/opt/wasi-sdk/share/wasi-sysroot
+ENV WASI_SDK_PATH=/opt/wasi-sdk
+
+COPY clang-wasi-sysroot.sh clang++-wasi-sysroot.sh /usr/local/bin/
+
+ENV CROSS_TRIPLE=wasm32-wasi
+ENV CROSS_ROOT=${WASI_SDK_PATH}
+ENV AR=${WASI_SDK_PATH}/bin/llvm-ar \
+    CC=clang-wasi-sysroot.sh \
+    CXX=clang++-wasi-sysroot.sh \
+    LD=${WASI_SDK_PATH}/bin/wasm-ld \
+    RANLIB=${WASI_SDK_PATH}/bin/llvm-ranlib
+
+#include "common.webassembly"
+
+COPY WASI.cmake /usr/src/
+RUN mv /usr/src/WASI.cmake /usr/share/cmake-*/Modules/Platform/
+COPY *.cmake /usr/src/
+RUN mv /usr/src/*.cmake /usr/share/cmake-*/Modules/
+COPY CheckTypeSize.c.in /usr/src/
+RUN mv /usr/src/CheckTypeSize.c.in /usr/share/cmake-*/Modules/
+COPY Toolchain.cmake ${CROSS_ROOT}/
+ENV CMAKE_TOOLCHAIN_FILE=${CROSS_ROOT}/Toolchain.cmake
+
+#include "common.label-and-env"

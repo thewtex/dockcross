@@ -52,7 +52,7 @@ GEN_IMAGES := android-arm android-arm64 \
 	manylinux_2_28-x64 \
 	manylinux2014-x64 manylinux2014-x86 \
 	manylinux2014-aarch64 linux-arm64-lts \
-	web-wasm web-wasi web-wasi-threads linux-mips linux-mips-uclibc linux-mips-lts windows-arm64 windows-armv7 \
+	web-wasm web-wasi web-wasi-emulated-threads web-wasi-threads linux-mips linux-mips-uclibc linux-mips-lts windows-arm64 windows-armv7 \
 	windows-static-x86 windows-static-x64 windows-static-x64-posix \
 	windows-shared-x86 windows-shared-x64 windows-shared-x64-posix \
 	linux-armv7 linux-armv7a linux-armv7l-musl linux-armv7-lts linux-armv7a-lts linux-x86_64-full \
@@ -63,13 +63,13 @@ GEN_IMAGES := android-arm android-arm64 \
 
 # Generate both amd64 and arm64 images
 MULTIARCH_IMAGES :=  linux-arm64 \
-	web-wasi
+	web-wasi web-wasi-emulated-threads
 
 GEN_IMAGE_DOCKERFILES = $(addsuffix /Dockerfile,$(GEN_IMAGES))
 
 # These images are expected to have explicit rules for *both* build and testing
 NON_STANDARD_IMAGES := manylinux_2_28-x64 manylinux2014-x64 manylinux2014-x86 \
-		      manylinux2014-aarch64 web-wasm web-wasi-threads
+		      manylinux2014-aarch64 web-wasm web-wasi-emulated-threads web-wasi-threads
 
 # Docker composite files
 DOCKER_COMPOSITE_SOURCES = common.docker common.debian common.manylinux2014 common.manylinux_2_28 common.buildroot \
