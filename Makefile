@@ -369,6 +369,11 @@ $(addsuffix .push-$(HOST_ARCH),$(MULTIARCH_IMAGES) web-wasi-threads web-wasm): $
 		&& $(BUILD_DOCKER) push $(ORG)/$(basename $@):$(TAG)-$(HOST_ARCH)
 
 .SECONDEXPANSION:
+$(addsuffix .push,$(STANDARD_IMAGES) $(NON_STANDARD_IMAGES)): $$(basename $$@)
+	$(BUILD_DOCKER) push $(ORG)/$(basename $@):latest \
+		&& $(BUILD_DOCKER) push $(ORG)/$(basename $@):$(TAG)
+
+.SECONDEXPANSION:
 $(addsuffix .manifest,$(MULTIARCH_IMAGES) web-wasi-threads web-wasm): $$(basename $$@)
 	if $(BUILDAH) manifest exists $(ORG)/$(basename $@); then \
 		$(BUILDAH) manifest rm $(ORG)/$(basename $@); fi
