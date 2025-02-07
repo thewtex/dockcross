@@ -364,6 +364,11 @@ $(addsuffix .test,$(MULTIARCH_IMAGES) web-wasi-threads): $$(basename $$@)
 	$(BIN)/dockcross-$(basename $@) -i $(ORG)/$(basename $@):latest-$(HOST_ARCH) python3 test/run.py $($@_ARGS)
 
 .SECONDEXPANSION:
+$(addsuffix .tag-$(HOST_ARCH),$(MULTIARCH_IMAGES) web-wasi-threads web-wasm): $$(basename $$@)
+	$(BUILD_DOCKER) tag $(ORG)/$(basename $@):latest-$(HOST_ARCH) \
+		 $(ORG)/$(basename $@):$(TAG)-$(HOST_ARCH)
+
+.SECONDEXPANSION:
 $(addsuffix .push-$(HOST_ARCH),$(MULTIARCH_IMAGES) web-wasi-threads web-wasm): $$(basename $$@)
 	$(BUILD_DOCKER) push $(ORG)/$(basename $@):latest-$(HOST_ARCH) \
 		&& $(BUILD_DOCKER) push $(ORG)/$(basename $@):$(TAG)-$(HOST_ARCH)
