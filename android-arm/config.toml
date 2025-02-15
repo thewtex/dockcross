@@ -1,0 +1,5 @@
+[build]
+target = "armv7-linux-androideabi"
+
+[target.armv7-linux-androideabi]
+linker = "/usr/arm-linux-androideabi/bin/armv7a-linux-androideabi23-clang"
