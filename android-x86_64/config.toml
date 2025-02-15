@@ -1,0 +1,5 @@
+[build]
+target = "x86_64-linux-android"
+
+[target.x86_64-linux-android]
+linker = "/usr/x86_64-linux-android/bin/x86_64-linux-android-clang"

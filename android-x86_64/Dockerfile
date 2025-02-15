@@ -29,6 +29,12 @@ RUN mkdir -p /build && \
     find ${CROSS_ROOT} -exec chmod a+r '{}' \; && \
     find ${CROSS_ROOT} -executable -exec chmod a+x '{}' \;
 
+# Prepare Rust
+ENV PATH="/root/.cargo/bin/:$PATH"
+RUN rustup target add x86_64-linux-android
+COPY config.toml /root/.cargo/
+
+# Prepare CMake
 COPY Toolchain.cmake ${CROSS_ROOT}/
 ENV CMAKE_TOOLCHAIN_FILE ${CROSS_ROOT}/Toolchain.cmake
 
