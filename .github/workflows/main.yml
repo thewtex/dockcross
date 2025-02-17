@@ -41,10 +41,16 @@ jobs:
           path: ./cache
           retention-days: 3
 
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/master'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
       - name: deploy
         if: github.ref == 'refs/heads/master'
         run: |
-            docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
             docker image push dockcross/base --all-tags
 
   base-multiarch:
@@ -86,10 +92,16 @@ jobs:
           path: ./cache
           retention-days: 3
 
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/master'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
       - name: deploy
         if: github.ref == 'refs/heads/master'
         run: |
-            docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
             docker image push dockcross/base --all-tags
 
   image:
@@ -192,7 +204,7 @@ jobs:
               cpython: "no",
               cpython_arg: "--host=x86_64-linux-android --target=x86_64-linux-android",
             }
-          # Linux arm64/armv8 images
+          # inux arm64/armv8 images
           - {
               image: "linux-arm64",
               multiarch: "",
@@ -752,7 +764,7 @@ jobs:
               cpython: "yes",
               cpython_arg: "--host=s390x-ibm-linux-gnu --target=s390x-ibm-linux-gnu",
             }
-          # Linux mips images 
+          # Linux mips images
           - {
               image: "linux-mips",
               multiarch: "",
@@ -1471,12 +1483,11 @@ jobs:
           cd ..
           rm -rf libopencm3
 
-      - name: archive ${{ matrix.arch_name.image }}-${{ matrix.os }}
-        if: matrix.arch_name.multiarch != 'yes'
+      - name: archive ${{ matrix.arch_name.image }}-${{ env.HOST_ARCH }}
+        if: matrix.arch_name.multiarch == 'yes'
         run: |
           mkdir -p cache-${{ matrix.arch_name.image }}-${{ env.HOST_ARCH }}
-            docker export dockcross/${{ matrix.arch_name.image }}:latest-${{ env.HOST_ARCH }} | xz -e9 -T0 > ./cache/${{ matrix.arch_name.image }}-${{ env.HOST_ARCH }}.tar.xz
-          fi
+          docker export dockcross/${{ matrix.arch_name.image }}:latest-${{ env.HOST_ARCH }} | xz -e9 -T0 > ./cache/${{ matrix.arch_name.image }}-${{ env.HOST_ARCH }}.tar.xz
 
       - name: save ${{ matrix.arch_name.image }}-${{ matrix.os }}
         uses: actions/upload-artifact@v4
@@ -1486,11 +1497,16 @@ jobs:
           path: ./cache/${{ matrix.arch_name.image }}-${{ env.HOST_ARCH }}.tar.xz
           retention-days: 3
 
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/master' && matrix.arch_name.multiarch != 'yes' && env.HOST_ARCH == 'amd64'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
 
       - name: deploy-not-multi-arch
         if: github.ref == 'refs/heads/master' && matrix.arch_name.multiarch != 'yes' && env.HOST_ARCH == 'amd64'
         run: |
-            docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
             make ${{ matrix.arch_name.image }}.push
 
   deploy-multi-arch-images:
@@ -1517,17 +1533,23 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: cache-${{ matrix.image_name }}-arm64
-          path: ./cache/${{ matrix.image_name }}-arm64.xz
+          path: ./cache/${{ matrix.image_name }}-arm64.tar.xz
 
       - name: load images
         run: |
           xz -d -k < ./cache/${{ matrix.image_name }}-amd64.tar.xz | docker import - dockcross/${{ matrix.image_name }}-amd64
           xz -d -k < ./cache/${{ matrix.image_name }}-arm64.tar.xz | docker import - dockcross/${{ matrix.image_name }}-arm64
 
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/master'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
       - name: deploy-multi-arch
         if: github.ref == 'refs/heads/master'
         run: |
-            docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
 
             make ${{ matrix.image_name }}.tag-amd64
             make ${{ matrix.image_name }}.tag-arm64
