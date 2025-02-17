@@ -1494,62 +1494,45 @@ jobs:
             make ${{ matrix.arch_name.image }}.push
 
   deploy-multi-arch-images:
-    name: ${{ matrix.arch_name.image }}
-    needs: [${{ matrix.arch_name.image }}_on_ubuntu-22.04, ${{ matrix.arch_name.image }}_on_ubuntu-22.04-arm]
+    needs: ["${{ matrix.image_name }}_on_ubuntu-22.04", "${{ matrix.image_name }}_on_ubuntu-22.04-arm"]
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        arch_name:
-          - {
-              image: "android-arm64"
-            }
-          - {
-              image: "web-wasm",
-            }
-          - {
-              image: "web-wasi",
-            }
-          - {
-              image: "web-wasi-threads",
-            }
-
+        image_name: ["android-arm64", "web-wasm", "web-wasi", "web-wasi-threads"]
+    steps:
       - name: checkout code
         uses: actions/checkout@v4
         with:
           submodules: "recursive"
           fetch-depth: 1
 
-      - name: set host_arch
-        run: |
-          echo "HOST_ARCH=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')" >> $GITHUB_ENV
-
-      - name: download ${{ matrix.arch_name.image }}-amd64
+      - name: download ${{ matrix.image_name }}-amd64
         uses: actions/download-artifact@v4
         with:
-          name: cache-${{ matrix.arch_name.image }}-amd64
-          path: ./cache/${{ matrix.arch_name.image }}-amd64.tar.xz
+          name: cache-${{ matrix.image_name }}-amd64
+          path: ./cache/${{ matrix.image_name }}-amd64.tar.xz
 
-      - name: download ${{ matrix.arch_name.image }}-arm64
+      - name: download ${{ matrix.image_name }}-arm64
         uses: actions/download-artifact@v4
         with:
-          name: cache-${{ matrix.arch_name.image }}-arm64
-          path: ./cache/${{ matrix.arch_name.image }}-arm64.xz
+          name: cache-${{ matrix.image_name }}-arm64
+          path: ./cache/${{ matrix.image_name }}-arm64.xz
 
       - name: load images
         run: |
-          xz -d -k < ./cache/${{ matrix.arch_name.image }}-amd64.tar.xz | docker import - dockcross/${{ matrix.arch_name.image }}-amd64
-          xz -d -k < ./cache/${{ matrix.arch_name.image }}-arm64.tar.xz | docker import - dockcross/${{ matrix.arch_name.image }}-arm64
+          xz -d -k < ./cache/${{ matrix.image_name }}-amd64.tar.xz | docker import - dockcross/${{ matrix.image_name }}-amd64
+          xz -d -k < ./cache/${{ matrix.image_name }}-arm64.tar.xz | docker import - dockcross/${{ matrix.image_name }}-arm64
 
       - name: deploy-multi-arch
         if: github.ref == 'refs/heads/master'
         run: |
             docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
 
-            make ${{ matrix.arch_name.image }}.tag-amd64
-            make ${{ matrix.arch_name.image }}.tag-arm64
+            make ${{ matrix.image_name }}.tag-amd64
+            make ${{ matrix.image_name }}.tag-arm64
 
-            make ${{ matrix.arch_name.image }}.push-amd64
-            make ${{ matrix.arch_name.image }}.push-arm64
+            make ${{ matrix.image_name }}.push-amd64
+            make ${{ matrix.image_name }}.push-arm64
 
-            make ${{ matrix.arch_name.image }}.push
+            make ${{ matrix.image_name }}.push
