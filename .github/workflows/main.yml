@@ -15,7 +15,7 @@ env:
 jobs:
   base:
     name: base
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - name: checkout code
         uses: actions/checkout@v4
@@ -93,9 +93,11 @@ jobs:
             docker image push dockcross/base --all-tags
 
   image:
-    name: ${{ matrix.arch_name.image }}_on_${{ matrix.os }}
-    needs: [base, base-multiarch]
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.arch_name.image }}
+    needs: base
+    runs-on: ubuntu-22.04
+    env:
+      OCI_EXE: docker
     strategy:
       fail-fast: false
       matrix:
