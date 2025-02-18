@@ -139,7 +139,7 @@ jobs:
             }
           - {
               image: "android-arm64",
-              multiarch: "yes",
+              multiarch: "",
               stockfish: "yes",
               stockfish_arg: "ARCH=armv8 COMP=ndk",
               ninja: "no",
@@ -206,7 +206,7 @@ jobs:
           # inux arm64/armv8 images
           - {
               image: "linux-arm64",
-              multiarch: "",
+              multiarch: "yes",
               stockfish: "yes",
               stockfish_arg: "ARCH=armv8",
               ninja: "yes",
@@ -1515,7 +1515,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image_name: ["android-arm64", "web-wasm", "web-wasi", "web-wasi-threads"]
+        image_name: ["linux-arm64", "web-wasm", "web-wasi", "web-wasi-threads"]
     steps:
       - name: checkout code
         uses: actions/checkout@v4
