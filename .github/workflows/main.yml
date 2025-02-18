@@ -104,10 +104,9 @@ jobs:
         run: |
             docker image push dockcross/base --all-tags
 
-  image:
-    name: ${{ matrix.arch_name.image }}
-    needs: base
-    runs-on: ubuntu-22.04
+  images:
+    needs: [base, base-multiarch]
+    runs-on: ${{ matrix.os }}
     env:
       OCI_EXE: docker
     strategy:
@@ -1510,7 +1509,8 @@ jobs:
             make ${{ matrix.arch_name.image }}.push
 
   deploy-multi-arch-images:
-    needs: ["${{ matrix.image_name }}_on_ubuntu-22.04", "${{ matrix.image_name }}_on_ubuntu-22.04-arm"]
+    needs:
+      - images
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
