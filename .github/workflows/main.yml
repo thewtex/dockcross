@@ -211,7 +211,7 @@ jobs:
               stockfish_arg: "ARCH=armv8",
               ninja: "yes",
               ninja_arg: "",
-              openssl: "yes",
+              openssl: "no",
               openssl_arg: "linux-aarch64",
               C: "yes",
               C_arg: "",
