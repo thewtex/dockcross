@@ -1487,7 +1487,7 @@ jobs:
 
       - name: save ${{ matrix.arch_name.image }}-${{ matrix.os }}
         uses: actions/upload-artifact@v4
-        if: matrix.arch_name.multiarch != 'yes'
+        if: matrix.arch_name.multiarch == 'yes'
         with:
           name: cache-${{ matrix.arch_name.image }}-${{ env.HOST_ARCH }}
           path: ./cache/${{ matrix.arch_name.image }}-${{ env.HOST_ARCH }}.tar.xz
