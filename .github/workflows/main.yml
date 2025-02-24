@@ -1217,7 +1217,7 @@ jobs:
           # web-wasm images
           - {
               image: "web-wasm",
-              multiarch: "",
+              multiarch: "yes",
               stockfish: "no",
               stockfish_arg: "",
               ninja: "no",
@@ -1261,7 +1261,7 @@ jobs:
             }
           - {
               image: "web-wasi-threads",
-              multiarch: "",
+              multiarch: "yes",
               stockfish: "no",
               stockfish_arg: "",
               ninja: "no",
