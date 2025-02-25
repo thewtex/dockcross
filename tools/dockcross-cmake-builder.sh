@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
 
+set -x
+
 if (( $# >= 1 )); then
-    image_complet=$1
-    image=${image_complet%:*}
-    tag=${image_complet#*:}
+    image_complete=$1
+    image=${image_complete%:*}
+    tag=${image_complete#*:}
     build_file=build-$image
+    host_arch=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
     if test $tag = $image; then
-        tag="latest"
+        # use multiarch image if available
+        if docker images | grep dockcross/${image} | grep latest-${host_arch} >/dev/null; then
+          tag="latest-${host_arch}"
+        else
+          tag="latest"
+        fi
     fi
     shift 1
 
@@ -17,7 +25,7 @@ if (( $# >= 1 )); then
 #    docker pull "dockcross/$image:$tag"
 
     echo "Make script dockcross-$image"
-    docker run --rm dockcross/"$image" > ./dockcross-"$image"
+    docker run --rm dockcross/"$image:$tag" > ./dockcross-"$image"
     chmod +x ./dockcross-"$image"
 
     echo "Build $build_file"
