@@ -18,6 +18,8 @@ Cross compiling toolchains in Docker images.
 - [Meson](https://mesonbuild.com) is pre-installed.
 - [Conan.io](https://www.conan.io) can be used as a package manager.
 - Toolchain files configured for CMake.
+- [Rustup](https://rustup.rs/) is pre-installed.
+- Some images (e.g. android) are configured for Rust.
 - Current directory is mounted as the container\'s workdir, `/work`.
 - Works with the [Docker for Mac](https://docs.docker.com/docker-for-mac/) and [Docker for Windows](https://docs.docker.com/docker-for-windows/).
 - Support using alternative container executor by setting **OCI_EXE** environment variable. By default, it searches for [docker](https://www.docker.com) and [podman](https://podman.io) executable.
@@ -30,6 +32,7 @@ Cross compiling toolchains in Docker images.
 3. `dockcross ninja -Cbuild`: Run ninja in the `./build` directory.
 4. `dockcross bash -c '$CC test/C/hello.c -o hello'`: Build the *hello.c* file with the compiler identified with the `CC` environmental variable in the build environment.
 5. `dockcross bash`: Run an interactive shell in the build environment.
+6. `dockcross cargo build`: Build the current Rust project.
 
 Note that commands are executed verbatim. If any shell processing for environment variable expansion or redirection is required, please use
 
