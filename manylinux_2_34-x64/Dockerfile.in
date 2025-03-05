@@ -1,11 +1,11 @@
 # Recent versions address yum functionality
-FROM quay.io/pypa/manylinux_2_28_x86_64:2025-02-15-d68c3fb
+FROM quay.io/pypa/manylinux_2_34_x86_64:2025-02-02-9ae4a5a
 
 LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
-ENV DEFAULT_DOCKCROSS_IMAGE=dockcross/manylinux_2_28-x64
+ENV DEFAULT_DOCKCROSS_IMAGE=dockcross/manylinux_2_34-x64
 
-#include "common.manylinux_2_28"
+#include "common.manylinux_2_34"
 
 #include "common.dockcross"
 
@@ -23,7 +23,7 @@ ENV AS=${CROSS_ROOT}/as \
 
 COPY linux-x64/${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 
-COPY manylinux_2_28-x64/Toolchain.cmake ${CROSS_ROOT}/../lib/
+COPY manylinux_2_34-x64/Toolchain.cmake ${CROSS_ROOT}/../lib/
 ENV CMAKE_TOOLCHAIN_FILE=${CROSS_ROOT}/../lib/Toolchain.cmake
 
 #include "common.label-and-env"

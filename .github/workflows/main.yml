@@ -1373,11 +1373,11 @@ jobs:
           cd ninja
           ./../tools/dockcross-cmake-builder.sh ${{ matrix.arch_name.image }} ${{ matrix.arch_name.ninja_arg }}
 
-      # Updated on 12/09/2022
+      # Updated on 04/04/2025 (Use openSSL_1_1_1w to fix error: implicit declaration of function 'memcmp')
       - name: openssl build test
         if: ${{ matrix.arch_name.openssl == 'yes' && (matrix.arch_name.multiarch == 'yes' || env.HOST_ARCH == 'amd64') }}
         run: |
-          git clone --depth 1 --branch OpenSSL_1_1_1q https://github.com/openssl/openssl.git
+          git clone --depth 1 --branch OpenSSL_1_1_1w https://github.com/openssl/openssl.git
           cd openssl
           wget https://raw.githubusercontent.com/mavlink/MAVSDK/main/third_party/openssl/dockcross-android.patch
           patch -p 0 < dockcross-android.patch

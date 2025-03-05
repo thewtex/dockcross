@@ -16,6 +16,7 @@ RUN \
     wget \
     nasm \
     zip \
+    libatomic \
   && \
   yum clean all && \
   # Remove sudo provided by devtoolset since it doesn't work with

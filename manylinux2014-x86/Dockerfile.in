@@ -1,5 +1,5 @@
 # Recent versions address yum functionality
-FROM quay.io/pypa/manylinux2014_i686:2024-07-20-e0def9a  
+FROM quay.io/pypa/manylinux2014_i686:2025-02-23-361da4c
 
 LABEL maintainer="Matt McCormick matt@mmmccormick.com"
 
