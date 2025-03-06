@@ -17,6 +17,12 @@ ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
     LD=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-ld \
     FC=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-gfortran
 
+# Prepare Rust
+ENV PATH="/root/.cargo/bin/:$PATH"
+RUN rustup target add aarch64-unknown-linux-musl && cargo install --version 0.28.0 cbindgen
+COPY config.toml /root/.cargo/
+
+# Prepare CMake
 COPY Toolchain.cmake ${CROSS_ROOT}/
 ENV CMAKE_TOOLCHAIN_FILE=${CROSS_ROOT}/Toolchain.cmake
 
@@ -32,9 +38,9 @@ ARG VERSION=latest
 ARG VCS_REF
 ARG VCS_URL
 LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$IMAGE \
-      org.label-schema.version=$VERSION \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.schema-version="1.0"
+    org.label-schema.name=$IMAGE \
+    org.label-schema.version=$VERSION \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url=$VCS_URL \
+    org.label-schema.schema-version="1.0"
 ENV DEFAULT_DOCKCROSS_IMAGE=${IMAGE}:${VERSION}

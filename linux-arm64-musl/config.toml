@@ -1,0 +1,7 @@
+[build]
+target = "aarch64-unknown-linux-musl"
+
+[target.aarch64-unknown-linux-musl]
+ar = "/usr/xcc/aarch64-linux-musl-cross/bin/aarch64-linux-musl-ar"
+linker = "/usr/xcc/aarch64-linux-musl-cross/bin/aarch64-linux-musl-ld"
+
