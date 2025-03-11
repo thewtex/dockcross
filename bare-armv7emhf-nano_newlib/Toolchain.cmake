@@ -10,7 +10,7 @@ set(CMAKE_CXX_COMPILER $ENV{CXX})
 
 set(CMAKE_CXX_FLAGS "-I ${cross_root}/include/")
 
-set(CMAKE_FIND_ROOT_PATH ${cross_root} ${cross_root}/${cross_triple})
+list(APPEND CMAKE_FIND_ROOT_PATH ${CMAKE_PREFIX_PATH} ${cross_root} ${cross_root}/${cross_triple})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
