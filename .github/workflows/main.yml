@@ -1550,9 +1550,11 @@ jobs:
             docker images
 
             make ${{ matrix.image_name }}.tag-amd64
-            make ${{ matrix.image_name }}.tag-arm64
-
             make ${{ matrix.image_name }}.push-amd64
+
+            export HOST_ARCH=arm64
+            make ${{ matrix.image_name }}.tag-arm64
             make ${{ matrix.image_name }}.push-arm64
+            unset HOST_ARCH
 
             make ${{ matrix.image_name }}.push
