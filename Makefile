@@ -30,7 +30,7 @@ TAG_FLAG := $(or $(TAG_FLAG), --tag)
 ORG = dockcross
 
 # Host architecture
-HOST_ARCH := $(shell uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
+HOST_ARCH := $(or $(HOST_ARCH), shell uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
 
 # Directory where to generate the dockcross script for each images (e.g bin/dockcross-manylinux2014-x64)
 BIN = ./bin
