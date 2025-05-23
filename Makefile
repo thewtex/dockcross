@@ -209,7 +209,7 @@ manylinux2014-aarch64: manylinux2014-aarch64/Dockerfile manylinux2014-x64
 manylinux2014-aarch64.test: manylinux2014-aarch64
 	$(TEST_DOCKER) run $(RM) $(ORG)/manylinux2014-aarch64:latest > $(BIN)/dockcross-manylinux2014-aarch64 \
 		&& chmod +x $(BIN)/dockcross-manylinux2014-aarch64
-	$(BIN)/dockcross-manylinux2014-aarch64 -i $(ORG)/manylinux2014-aarch64:latest /opt/python/cp38-cp38/bin/python test/run.py
+	$(BIN)/dockcross-manylinux2014-aarch64 -i $(ORG)/manylinux2014-aarch64:latest /opt/python/cp311-cp311/bin/python test/run.py
 
 #
 # manylinux_2_28-x64
@@ -269,7 +269,7 @@ manylinux2014-x64: manylinux2014-x64/Dockerfile
 manylinux2014-x64.test: manylinux2014-x64
 	$(TEST_DOCKER) run $(RM) $(ORG)/manylinux2014-x64:latest > $(BIN)/dockcross-manylinux2014-x64 \
 		&& chmod +x $(BIN)/dockcross-manylinux2014-x64
-	$(BIN)/dockcross-manylinux2014-x64 -i $(ORG)/manylinux2014-x64:latest /opt/python/cp38-cp38/bin/python test/run.py
+	$(BIN)/dockcross-manylinux2014-x64 -i $(ORG)/manylinux2014-x64:latest /opt/python/cp311-cp311/bin/python test/run.py
 
 #
 # manylinux2014-x86
@@ -289,7 +289,7 @@ manylinux2014-x86: manylinux2014-x86/Dockerfile
 manylinux2014-x86.test: manylinux2014-x86
 	$(TEST_DOCKER) run $(RM) $(ORG)/manylinux2014-x86:latest > $(BIN)/dockcross-manylinux2014-x86 \
 		&& chmod +x $(BIN)/dockcross-manylinux2014-x86
-	$(BIN)/dockcross-manylinux2014-x86 -i $(ORG)/manylinux2014-x86:latest /opt/python/cp38-cp38/bin/python test/run.py
+	$(BIN)/dockcross-manylinux2014-x86 -i $(ORG)/manylinux2014-x86:latest /opt/python/cp311-cp311/bin/python test/run.py
 
 #
 # base-$(HOST_ARCH)

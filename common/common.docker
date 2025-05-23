@@ -43,7 +43,7 @@ RUN \
   /buildscripts/build-and-install-cmake.sh $X86_FLAG && \
   /buildscripts/build-and-install-rustup.sh && \
   /buildscripts/install-liquidprompt-binary.sh && \
-  PYTHON=$([ -e /opt/python/cp38-cp38/bin/python ] && echo "/opt/python/cp38-cp38/bin/python" || echo "python3") && \
+  PYTHON=$([ -e /opt/python/cp311-cp311/bin/python ] && echo "/opt/python/cp311-cp311/bin/python" || echo "python3") && \
   /buildscripts/install-python-packages.sh -python ${PYTHON} && \
   /buildscripts/build-and-install-ninja.sh -python ${PYTHON} && \
   /buildscripts/build-and-install-flatcc.sh && \
