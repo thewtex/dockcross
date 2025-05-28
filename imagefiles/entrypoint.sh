@@ -28,6 +28,9 @@ if [[ -n $BUILDER_UID ]] && [[ -n $BUILDER_GID ]]; then
     useradd -o -m -g "$BUILDER_GID" -u "$BUILDER_UID" "$BUILDER_USER" 2> /dev/null
     export HOME=/home/${BUILDER_USER}
     shopt -s dotglob
+    # Move rustup/cargo directories as they are large, and not needed as root
+    mv -t $HOME/ /root/.rustup /root/.cargo
+    # Copy the rest
     cp -r /root/* $HOME/
     chown -R $BUILDER_UID:$BUILDER_GID $HOME
 
