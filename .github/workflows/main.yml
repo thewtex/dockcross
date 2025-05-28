@@ -1534,8 +1534,8 @@ jobs:
 
       - name: load images
         run: |
-          xz -d -k < ./cache-${{ matrix.image_name }}-amd64/${{ matrix.image_name }}-amd64.tar.xz | docker import - dockcross/${{ matrix.image_name }}-amd64:latest-amd64
-          xz -d -k < ./cache-${{ matrix.image_name }}-arm64/${{ matrix.image_name }}-arm64.tar.xz | docker import - dockcross/${{ matrix.image_name }}-arm64:latest-arm64
+          xz -d -k < ./cache-${{ matrix.image_name }}-amd64/${{ matrix.image_name }}-amd64.tar.xz | docker import - dockcross/${{ matrix.image_name }}:latest-amd64
+          xz -d -k < ./cache-${{ matrix.image_name }}-arm64/${{ matrix.image_name }}-arm64.tar.xz | docker import - dockcross/${{ matrix.image_name }}:latest-arm64
 
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/master'
