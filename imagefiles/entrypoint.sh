@@ -38,7 +38,7 @@ if [[ -n $BUILDER_UID ]] && [[ -n $BUILDER_GID ]]; then
 
     # Enable passwordless sudo capabilities for the user
     chown root:$BUILDER_GID "$(which gosu)"
-    chmod +s "$(which gosu)"; sync
+    chmod +s "$(which gosu)"
 
     # Execute project specific pre execution hook
     if [[ -e /work/.dockcross ]]; then
