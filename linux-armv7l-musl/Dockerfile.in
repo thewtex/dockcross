@@ -6,8 +6,11 @@ ENV CROSS_TRIPLE=armv7l-linux-musleabihf
 ENV CROSS_ROOT=${XCC_PREFIX}/${CROSS_TRIPLE}-cross
 
 RUN mkdir -p ${XCC_PREFIX}
-RUN curl --max-time 15 --retry 5 -LO http://musl.cc/${CROSS_TRIPLE}-cross.tgz
-RUN tar -C ${XCC_PREFIX} -xvf ${CROSS_TRIPLE}-cross.tgz
+# RUN curl --max-time 15 --retry 5 -LO https://musl.cc/${CROSS_TRIPLE}-cross.tgz
+# RUN tar -C ${XCC_PREFIX} -xvf ${CROSS_TRIPLE}-cross.tgz
+# Mirrored for reliability
+RUN curl --max-time 15 --retry 5 -LO https://github.com/dockcross/dockcross/releases/download/toolchain-sources/${CROSS_TRIPLE}-cross-retrieved-2025-06-07.tgz
+RUN tar -C ${XCC_PREFIX} -xvf ${CROSS_TRIPLE}-cross-retrieved-2025-06-07.tgz
 
 ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
     AR=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-ar \
