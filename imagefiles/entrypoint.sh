@@ -26,6 +26,10 @@ if [[ -n $BUILDER_UID ]] && [[ -n $BUILDER_GID ]]; then
 
     groupadd -o -g "$BUILDER_GID" "$BUILDER_GROUP" 2> /dev/null
     useradd -o -m -g "$BUILDER_GID" -u "$BUILDER_UID" "$BUILDER_USER" 2> /dev/null
+
+    # Change ownership of /dev/pts/0 to new user
+    chown "$BUILDER_UID" /dev/pts/0
+
     export HOME=/home/${BUILDER_USER}
     shopt -s dotglob
     # Move rustup/cargo directories as they are large, and not needed as root
