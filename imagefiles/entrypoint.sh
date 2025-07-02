@@ -28,7 +28,7 @@ if [[ -n $BUILDER_UID ]] && [[ -n $BUILDER_GID ]]; then
     useradd -o -m -g "$BUILDER_GID" -u "$BUILDER_UID" "$BUILDER_USER" 2> /dev/null
 
     # Change ownership of /dev/pts/0 to new user
-    chown "$BUILDER_UID" /dev/pts/0
+    chown "$BUILDER_UID" /dev/pts/0 2> /dev/null
 
     export HOME=/home/${BUILDER_USER}
     shopt -s dotglob
