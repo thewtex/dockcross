@@ -1354,15 +1354,15 @@ jobs:
             make ${{ matrix.arch_name.image }}.test
           fi
 
-      # Updated on 19/05/2022
+      # Updated on 15/07/2025
       - name: stockfish build test
         if: ${{ matrix.arch_name.stockfish == 'yes' && (matrix.arch_name.multiarch == 'yes' || env.HOST_ARCH == 'amd64') }}
         run: |
-          git clone --depth 1 --branch sf_15 https://github.com/official-stockfish/Stockfish.git
-          cd Stockfish/src
-          ./../../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} net
-          ./../../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} build ${{ matrix.arch_name.stockfish_arg }} -j${nproc}
-          cd ../..
+          git clone --depth 1 --branch sf_17.1 https://github.com/official-stockfish/Stockfish.git
+          cd Stockfish
+          ./../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} -C src net
+          ./../tools/dockcross-make-builder.sh ${{ matrix.arch_name.image }} -C src build ${{ matrix.arch_name.stockfish_arg }} -j${nproc}
+          cd ..
           rm -rf Stockfish
 
       # Updated on 12/09/2022
