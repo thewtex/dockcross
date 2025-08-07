@@ -1322,7 +1322,7 @@ jobs:
         run: |
           echo "HOST_ARCH=$(uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')" >> $GITHUB_ENV
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: cache
           path: ./cache
@@ -1330,7 +1330,7 @@ jobs:
       - name: load base
         run: xz -d -k < ./cache/base.tar.xz | docker import - dockcross/base:latest
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: cache-${{ matrix.os }}
           path: ./cache
@@ -1521,13 +1521,13 @@ jobs:
           fetch-depth: 1
 
       - name: download ${{ matrix.image_name }}-amd64
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cache-${{ matrix.image_name }}-amd64
           path: ./cache-${{ matrix.image_name }}-amd64
 
       - name: download ${{ matrix.image_name }}-arm64
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: cache-${{ matrix.image_name }}-arm64
           path: ./cache-${{ matrix.image_name }}-arm64
