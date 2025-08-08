@@ -9,6 +9,8 @@
 DOCKER := $(or $(OCI_EXE), docker)
 BUILD_DOCKER := $(or $(BUILD_DOCKER), $(DOCKER))
 BUILDAH := $(or $(BUILDAH_EXE), buildah)
+RM = --rm
+
 # Name of the docker-equivalent executable for running test containers.
 # Supports the use case:
 #
@@ -93,13 +95,6 @@ windows-armv7.test_ARGS = --exe-suffix ".exe"
 windows-arm64.test_ARGS = --exe-suffix ".exe"
 bare-armv7emhf-nano_newlib.test_ARGS = --linker-flags="--specs=nosys.specs"
 
-# On CircleCI, do not attempt to delete container
-# See https://circleci.com/docs/docker-btrfs-error/
-RM = --rm
-ifeq ("$(CIRCLECI)", "true")
-	RM =
-endif
-
 # Tag images with date and Git short hash in addition to revision
 TAG := $(shell date '+%Y%m%d')-$(shell git rev-parse --short HEAD)
 
@@ -122,22 +117,8 @@ test: base.test $(addsuffix .test,$(IMAGES))
 #
 # Generic Targets (can specialize later).
 #
-
 $(GEN_IMAGE_DOCKERFILES) Dockerfile: %Dockerfile: %Dockerfile.in $(DOCKER_COMPOSITE_PATH)
-	sed \
-		-e '/common.docker/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.docker' \
-		-e '/common.debian/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.debian' \
-		-e '/common.manylinux_2_28/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.manylinux_2_28' \
-		-e '/common.manylinux_2_34/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.manylinux_2_34' \
-		-e '/common.manylinux2014/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.manylinux2014' \
-		-e '/common.crosstool/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.crosstool' \
-		-e '/common.buildroot/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.buildroot' \
-		-e '/common-manylinux.crosstool/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common-manylinux.crosstool' \
-		-e '/common.webassembly/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.webassembly' \
-		-e '/common.windows/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.windows' \
-		-e '/common.dockcross/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.dockcross' \
-		-e '/common.label-and-env/ r $(DOCKER_COMPOSITE_FOLDER_PATH)common.label-and-env' \
-		$< > $@
+	sed $(foreach f,$(DOCKER_COMPOSITE_SOURCES),-e '/$(f)/ r $(DOCKER_COMPOSITE_FOLDER_PATH)$(f)') $< > $@
 
 #
 # web-wasm
