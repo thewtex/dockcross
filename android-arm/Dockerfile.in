@@ -18,7 +18,7 @@ ENV AS=${CROSS_ROOT}/bin/llvm-as \
     LD=${CROSS_ROOT}/bin/ld
 
 ENV ANDROID_NDK_REVISION=28b
-ENV ANDROID_API=23
+ENV ANDROID_API=24
 
 RUN mkdir -p /build && \
     cd /build && \
