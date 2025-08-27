@@ -36,8 +36,8 @@ fi
 
 cd /usr/src
 
-CMAKE_ROOT=cmake-${CMAKE_VERSION}-Centos5-${ARCH}
-CMAKE_DOWNLOAD_URL=https://github.com/dockbuild/CMake/releases/download/v${CMAKE_VERSION}
+CMAKE_ROOT=cmake-${CMAKE_VERSION}-linux-${ARCH}
+CMAKE_DOWNLOAD_URL=https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}
 
 echo "Downloading ${CMAKE_DOWNLOAD_URL}/${CMAKE_ROOT}.tar.gz"
 
