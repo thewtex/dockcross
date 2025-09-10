@@ -10,6 +10,12 @@
 set -e
 set -o pipefail
 
+# Get script directory
+SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
+
+# Get build utilities
+source $SCRIPT_DIR/utils.sh
+
 PYTHON=python
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -31,25 +37,22 @@ if [[ -z "${NINJA_VERSION}" ]]; then
 fi
 
 # Download
-url="https://github.com/ninja-build/ninja/archive/v${NINJA_VERSION}.tar.gz"
+NINJA_DOWNLOAD_URL="https://github.com/ninja-build/ninja/archive/"
+NINJA_ROOT="v${NINJA_VERSION}"
 
-curl --connect-timeout 30 \
-    --max-time 10 \
-    --retry 5 \
-    --retry-delay 10 \
-    --retry-max-time 30 \
-    -# -o ninja.tar.gz -LO "$url"
+fetch_source "${NINJA_ROOT}.tar.gz" "${NINJA_DOWNLOAD_URL}"
 
-mkdir ninja
-tar -xzvf ./ninja.tar.gz --strip-components=1 -C ./ninja
+# Since the archive name doesn't match the top-level directory, explicitly specify it.
+mkdir -p "${NINJA_ROOT}"
+tar xvzf "${NINJA_ROOT}.tar.gz"  --strip-components=1 -C "${NINJA_ROOT}"
 
 # Configure, build and install
-pushd ./ninja
+pushd "${NINJA_ROOT}"
 echo "Configuring ninja using [$PYTHON]"
 $PYTHON ./configure.py --bootstrap && ./ninja
 cp ./ninja /usr/bin/
 popd
 
 # Clean
-rm -rf ./ninja*
+rm -rf "${NINJA_ROOT}" "${NINJA_ROOT}.tar.gz"
 
